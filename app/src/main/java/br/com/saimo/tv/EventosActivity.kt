@@ -235,14 +235,11 @@ class EventosActivity : TelaComMenu() {
      * três minutos, guardada entre uma tela e outra. Ao abrir a tela, busca na
      * hora se a guardada tem mais de um minuto.
      */
+    @Suppress("UNUSED_PARAMETER")
     private fun doMonitor(abrindo: Boolean): String? {
-        val idade = System.currentTimeMillis() - monitorEm
-        val limite = if (abrindo) MONITOR_AO_ABRIR_MS else MONITOR_INTERVALO_MS
-        if (monitorCorpo != null && idade in 0 until limite) return monitorCorpo
-        val corpo = texto(STREAMING) ?: return monitorCorpo
-        monitorCorpo = corpo
-        monitorEm = System.currentTimeMillis()
-        return corpo
+        // Versão pessoal: a agenda de transmissões vinha do servidor do Saimo (com os links dos
+        // jogos). Sem ela, a tela de Eventos fica vazia; os canais vêm só das listas da pessoa.
+        return null
     }
 
     private suspend fun buscar(abrindo: Boolean): List<Jogo>? = kotlinx.coroutines.coroutineScope {
@@ -415,7 +412,6 @@ class EventosActivity : TelaComMenu() {
         /// Compiladas uma vez: cada jogo da agenda é comparado com cada jogo da ESPN.
         val ACENTOS = Regex("\\p{M}+")
         val SEPARADOR = Regex("[^a-z0-9]+")
-        const val STREAMING = "https://saimo-tv.pages.dev/eventos-extra.json"
         const val MONITOR_INTERVALO_MS = 180_000L
         const val MONITOR_AO_ABRIR_MS = 60_000L
         val ESCOPO_ESPN = kotlinx.coroutines.CoroutineScope(Dispatchers.IO + kotlinx.coroutines.SupervisorJob())

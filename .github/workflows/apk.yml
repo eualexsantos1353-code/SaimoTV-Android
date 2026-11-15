@@ -1,0 +1,52 @@
+# Versão pessoal: compila o APK no GitHub (aba Actions → APK → Run workflow) e deixa para baixar
+# em "Artifacts". Assinado com a chave do segredo ANDROID_DEBUG_KEYSTORE_B64 (a mesma sempre, para
+# instalar por cima sem desinstalar).
+name: APK
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Chave de assinatura
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_DEBUG_KEYSTORE_B64 }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ]; then
+            printf '%s' "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/chave.keystore"
+            {
+              echo "storeFile=$RUNNER_TEMP/chave.keystore"
+              echo "storePassword=android"
+              echo "keyAlias=androiddebugkey"
+              echo "keyPassword=android"
+            } > keystore.properties
+          else
+            echo "::warning::Segredo ANDROID_DEBUG_KEYSTORE_B64 ausente: APK com chave de depuração (não instala por cima)."
+          fi
+
+      - name: Compilar
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon assembleRelease
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: saimo-pessoal-${{ github.run_number }}
+          path: app/build/outputs/apk/release/*.apk
+          retention-days: 3
+          if-no-files-found: error

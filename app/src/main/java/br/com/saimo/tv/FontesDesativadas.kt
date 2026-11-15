@@ -27,6 +27,8 @@ import org.json.JSONObject
  * aparelho: abrir e fechar o app dentro dessa hora não pede de novo.
  */
 object FontesDesativadas {
+    /** Versão pessoal: nunca baixa a lista do servidor do Saimo */
+    private const val DESLIGADA = true
 
     private const val ENDERECO = "https://saimo-tv.pages.dev/fontes-desativadas.json"
     /// Uma hora: desligar um servidor no painel chega a todos em até uma hora,
@@ -47,7 +49,8 @@ object FontesDesativadas {
     fun iniciar(contexto: Context) {
         val p = contexto.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         prefs = p
-        hosts = p.getStringSet("hosts", null)?.toSet() ?: emptySet()
+        // Versão pessoal: a lista remota de domínios desligados não filtra as listas da pessoa
+        hosts = emptySet()
         lidoEm = p.getLong("lido_em", 0L)
     }
 
@@ -58,7 +61,8 @@ object FontesDesativadas {
      * lista de canais.
      */
     suspend fun atualizar(): Boolean = withContext(Dispatchers.IO) {
-        if (System.currentTimeMillis() - lidoEm in 0 until VALIDADE_MS) return@withContext false
+        // Versão pessoal: não consulta o servidor do Saimo
+        if (DESLIGADA || System.currentTimeMillis() - lidoEm in 0 until VALIDADE_MS) return@withContext false
         // Sem rede o pedido nem chega ao monitor: tenta de novo na próxima vez.
         // Com resposta (boa ou não), só daqui a uma hora.
         val corpo = runCatching {

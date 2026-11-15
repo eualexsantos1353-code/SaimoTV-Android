@@ -26,6 +26,8 @@ import java.io.File
  */
 @UnstableApi
 object Atualizacao {
+    /** Versão pessoal: atualização automática desligada */
+    private const val DESLIGADA = true
 
     /// O único endereço de atualização, fixo: o versao.json anexado à última
     /// release. Não depende de nenhum endereço de lista.
@@ -52,6 +54,8 @@ object Atualizacao {
      */
     suspend fun procurar(context: Context, manual: Boolean = false): Versao? =
         withContext(Dispatchers.IO) {
+            // Versão pessoal: não procura a versão oficial (ela desfaria as mudanças)
+            if (DESLIGADA) return@withContext null
             val prefs = context.getSharedPreferences(ARQUIVO, Context.MODE_PRIVATE)
             val forcar = manual || prefs.getString(PENDENTE, null) != null
             prefs.edit().putLong(VISTO, System.currentTimeMillis()).apply()
