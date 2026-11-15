@@ -11,7 +11,8 @@ internal object BuscaDeCanal {
     private val ETIQUETAS = Regex("\\[[^\\]]*\\]|\\([^)]*\\)")
     private val SEPARADOR = Regex("[^a-z0-9+]+")
     private val QUALIDADE = setOf("fhd", "hd", "sd", "uhd", "4k", "fullhd", "h265", "h264", "hevc", "alt")
-    private val ALTA = setOf("fhd", "fullhd", "4k", "uhd")
+    private val FULL_HD = setOf("fhd", "fullhd")
+    private val ULTRA = setOf("4k", "uhd")
 
     private fun palavras(nome: String): List<String> =
         Normalizer.normalize(nome, Normalizer.Form.NFD).replace(ACENTOS, "").lowercase()
@@ -19,14 +20,22 @@ internal object BuscaDeCanal {
 
     fun base(nome: String): String = palavras(nome).filter { it !in QUALIDADE }.joinToString(" ")
 
-    /** FHD/4K primeiro (0), depois HD (1), sem marca (2), SD por último (3) */
+    /** Nome inteiro comparável, com a qualidade: "Band 4K" → "band 4k" (pedido de versão exata) */
+    fun completo(nome: String): String = palavras(nome).joinToString(" ")
+
+    /**
+     * Versão preferida quando o pedido não diz a qualidade: FHD (0), 4K (1), HD (2), sem marca (3),
+     * SD (4). O 4K vem depois do FHD porque pesa bem mais na internet e trava antes; para abrir o
+     * 4K, peça com a qualidade no nome (saimo://canal?n=Band%204K).
+     */
     fun qualidade(nome: String): Int {
         val p = palavras(nome)
         return when {
-            p.any { it in ALTA } -> 0
-            "hd" in p -> 1
-            "sd" in p -> 3
-            else -> 2
+            p.any { it in FULL_HD } -> 0
+            p.any { it in ULTRA } -> 1
+            "hd" in p -> 2
+            "sd" in p -> 4
+            else -> 3
         }
     }
 

@@ -459,13 +459,17 @@ class MainActivity : AppCompatActivity(), Connect.Listener, Painel.Ouvinte {
 
     /**
      * Canal pedido pelo nome (link saimo://canal?n=…). Ignora acentos, maiúsculas e qualidade
-     * ("Band" acha "BAND FHD"); entre versões do mesmo canal prefere FHD/4K, depois HD, e deixa
-     * H.265 por último. Sem nome igual, aceita um que comece com o pedido ("Band" → "Band SP").
+     * ("Band" acha "BAND FHD"); entre versões do mesmo canal prefere FHD, depois 4K, depois HD, e
+     * deixa H.265 por último. Com a qualidade no pedido ("Band 4K"), abre essa versão. Sem nome igual, aceita um que comece com o pedido ("Band" → "Band SP").
      * Sem nenhum, -1: antes qualquer pedaço do nome servia e o link caía em outro canal.
      */
     private fun encontrarIndiceCanal(nome: String): Int {
         val exato = ordered.indexOfFirst { it.name.equals(nome, ignoreCase = true) }
         if (exato >= 0) return exato
+        // Pedido com a qualidade ("Band 4K"): a versão exata, se existir
+        val inteiro = BuscaDeCanal.completo(nome)
+        val mesmoInteiro = ordered.indexOfFirst { BuscaDeCanal.completo(it.name) == inteiro }
+        if (inteiro.isNotEmpty() && mesmoInteiro >= 0) return mesmoInteiro
         val pedido = BuscaDeCanal.base(nome)
         if (pedido.isEmpty()) return -1
         val bases = ordered.map { BuscaDeCanal.base(it.name) }
