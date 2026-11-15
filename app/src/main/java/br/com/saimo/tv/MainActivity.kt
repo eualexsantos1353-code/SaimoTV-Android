@@ -339,8 +339,10 @@ class MainActivity : AppCompatActivity(), Connect.Listener, Painel.Ouvinte {
             numeros = ordered.mapIndexed { i, c -> c.name to i + 1 }.toMap()
             play(ordered.indexOfFirst { it.name == rNome }.coerceAtLeast(0))
         } else {
-            val pedido = intent.getStringExtra(EXTRA_CANAL) ?: Preferencias.ultimoCanal
-            play(ordered.indexOfFirst { it.name == pedido }.coerceAtLeast(0))
+            // Link saimo://canal com o app fechado: mesma busca do app aberto (onNewIntent). Antes
+            // só o nome idêntico valia, e "Band" caía no primeiro canal da lista.
+            val doLink = intent.getStringExtra(EXTRA_CANAL)?.let { encontrarIndiceCanal(it) }?.takeIf { it >= 0 }
+            play((doLink ?: ordered.indexOfFirst { it.name == Preferencias.ultimoCanal }).coerceAtLeast(0))
         }
         refreshCatalog()
         handler.postDelayed(tick, TICK_MS)
@@ -455,17 +457,28 @@ class MainActivity : AppCompatActivity(), Connect.Listener, Painel.Ouvinte {
     private var ultimaImagem = 0L
     private var ultimaPosicao = -1L
 
+    /**
+     * Canal pedido pelo nome (link saimo://canal?n=…). Ignora acentos, maiúsculas e qualidade
+     * ("Band" acha "BAND FHD"); entre versões do mesmo canal prefere FHD/4K, depois HD, e deixa
+     * H.265 por último. Sem nome igual, aceita um que comece com o pedido ("Band" → "Band SP").
+     * Sem nenhum, -1: antes qualquer pedaço do nome servia e o link caía em outro canal.
+     */
     private fun encontrarIndiceCanal(nome: String): Int {
-        var idx = ordered.indexOfFirst { it.name.equals(nome, ignoreCase = true) }
-        if (idx >= 0) return idx
-        val limpo = nome.lowercase().replace(" ", "").replace("-", "").replace("hd", "")
-        if (limpo.isNotBlank()) {
-            idx = ordered.indexOfFirst {
-                val itLimpo = it.name.lowercase().replace(" ", "").replace("-", "").replace("hd", "")
-                itLimpo == limpo || itLimpo.contains(limpo) || limpo.contains(itLimpo)
-            }
-        }
-        return idx
+        val exato = ordered.indexOfFirst { it.name.equals(nome, ignoreCase = true) }
+        if (exato >= 0) return exato
+        val pedido = BuscaDeCanal.base(nome)
+        if (pedido.isEmpty()) return -1
+        val bases = ordered.map { BuscaDeCanal.base(it.name) }
+        fun melhor(indices: List<Int>): Int = indices.minWithOrNull(compareBy<Int>(
+            { BuscaDeCanal.qualidade(ordered[it].name) },
+            { BuscaDeCanal.hevc(ordered[it].name) },
+            { ordered[it].name.length },
+        )) ?: -1
+        val iguais = bases.indices.filter { bases[it] == pedido }
+        if (iguais.isNotEmpty()) return melhor(iguais)
+        val comecam = bases.indices.filter { bases[it].startsWith("$pedido ") }
+        if (comecam.isNotEmpty()) return melhor(comecam)
+        return -1
     }
 
     override fun onNewIntent(intent: Intent) {
