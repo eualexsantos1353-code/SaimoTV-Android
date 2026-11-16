@@ -53,7 +53,7 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
     private lateinit var sinopse: TextView
     private lateinit var painelHora: TextView
     private lateinit var painelData: TextView
-    private lateinit var continuar: View
+    private lateinit var blocoContinuar: View
     private lateinit var continuarRotulo: TextView
     private lateinit var continuarCanal: TextView
     private lateinit var continuarPrograma: TextView
@@ -277,7 +277,7 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
     private fun montarPainel() {
         painelHora = findViewById(R.id.inicioHora)
         painelData = findViewById(R.id.inicioData)
-        continuar = findViewById(R.id.inicioContinuar)
+        blocoContinuar = findViewById(R.id.inicioContinuar)
         continuarRotulo = findViewById(R.id.inicioContinuarRotulo)
         continuarCanal = findViewById(R.id.inicioContinuarCanal)
         continuarPrograma = findViewById(R.id.inicioContinuarPrograma)
@@ -286,7 +286,7 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         val busca = findViewById<TextView>(R.id.inicioBusca)
         icone(busca, R.drawable.ic_search, 20, 0xFFB4B2A9.toInt())
         busca.setOnClickListener { BuscaActivity.abrir(this) }
-        continuar.setOnClickListener {
+        blocoContinuar.setOnClickListener {
             val ultimo = Preferencias.ultimoCanal
             if (ultimo == null) abrirAoVivo()
             else startActivity(Intent(this, MainActivity::class.java).putExtra(MainActivity.EXTRA_CANAL, ultimo))
@@ -367,7 +367,7 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
     private fun focarPrimeiro(tentativas: Int = 10) {
         filas.scrollToPosition(0)
         // O painel é o começo da tela: o foco vai ao bloco grande (Continuar ao vivo).
-        if (::continuar.isInitialized && continuar.isShown && continuar.requestFocus()) return
+        if (::blocoContinuar.isInitialized && blocoContinuar.isShown && blocoContinuar.requestFocus()) return
         filas.post(Runnable { focarPrimeiraCapa(tentativas) })
     }
 
