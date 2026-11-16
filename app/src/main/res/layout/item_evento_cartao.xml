@@ -14,7 +14,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="160dp"
-        android:background="@drawable/bg_logo">
+        android:background="@drawable/bg_jogo">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,8 +24,8 @@
             android:paddingTop="18dp">
             <ImageView
                 android:id="@+id/eventoCasa"
-                android:layout_width="78dp"
-                android:layout_height="78dp"
+                android:layout_width="84dp"
+                android:layout_height="84dp"
                 android:contentDescription="@null"
                 android:scaleType="fitCenter" />
             <TextView
@@ -36,12 +36,12 @@
                 android:layout_marginEnd="18dp"
                 android:fontFamily="sans-serif-black"
                 android:text="x"
-                android:textColor="@color/text_secondary"
+                android:textColor="#CCFFFFFF"
                 android:textSize="24sp" />
             <ImageView
                 android:id="@+id/eventoFora"
-                android:layout_width="78dp"
-                android:layout_height="78dp"
+                android:layout_width="84dp"
+                android:layout_height="84dp"
                 android:contentDescription="@null"
                 android:scaleType="fitCenter" />
         </LinearLayout>
