@@ -368,16 +368,18 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         filas.scrollToPosition(0)
         // O painel é o começo da tela: o foco vai ao bloco grande (Continuar ao vivo).
         if (::continuar.isInitialized && continuar.isShown && continuar.requestFocus()) return
-        filas.post {
-            val fileira = filas.findViewHolderForAdapterPosition(0)?.itemView
-            val capas = fileira?.findViewById<RecyclerView>(R.id.filaCapas)
-            if (capas?.getChildAt(0)?.requestFocus() == true) return@post
-            // A fileira ainda não desenhou as capas: tenta de novo no próximo
-            // quadro, em vez de largar o foco no menu.
-            if (tentativas > 0) filas.postDelayed({ focarPrimeiro(tentativas - 1) }, 60)
-            else if (vazioVisivel()) focarBotaoDoVazio()
-            else MenuGlobal.focar(barraMenu, Aba.INICIO)
-        }
+        filas.post(Runnable { focarPrimeiraCapa(tentativas) })
+    }
+
+    private fun focarPrimeiraCapa(tentativas: Int) {
+        val fileira = filas.findViewHolderForAdapterPosition(0)?.itemView
+        val capas = fileira?.findViewById<RecyclerView>(R.id.filaCapas)
+        if (capas?.getChildAt(0)?.requestFocus() == true) return
+        // A fileira ainda não desenhou as capas: tenta de novo no próximo
+        // quadro, em vez de largar o foco no menu.
+        if (tentativas > 0) filas.postDelayed(Runnable { focarPrimeiro(tentativas - 1) }, 60)
+        else if (vazioVisivel()) focarBotaoDoVazio()
+        else MenuGlobal.focar(barraMenu, Aba.INICIO)
     }
 
     // MARK: - Fileiras
