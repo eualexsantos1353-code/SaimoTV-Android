@@ -468,4 +468,16 @@
     <string name="ml_adicionar">Adicionar</string>
     <string name="ml_baixando">Baixando a lista…</string>
     <string name="ml_celular_dica">Cole o link da sua lista M3U: só isso já basta. Usuário e senha são opcionais, para listas que pedem login. Dá para escrever pelo celular (Saimo Connect).</string>
+    <!-- O painel do Início -->
+    <string name="inicio_painel_nome">Saimo</string>
+    <string name="inicio_painel_buscar">Buscar canal, filme ou série</string>
+    <string name="inicio_painel_continuar">Continuar ao vivo</string>
+    <string name="inicio_painel_ao_vivo">Ao vivo</string>
+    <string name="inicio_painel_escolher">Escolha um canal</string>
+    <string name="inicio_painel_ate">%1$s · até %2$s</string>
+    <string name="inicio_painel_sem_guia">Sem guia para este canal</string>
+    <string name="inicio_painel_programacao">Programação</string>
+    <string name="inicio_painel_eventos">Eventos</string>
+    <string name="inicio_painel_favoritos">Favoritos</string>
+    <string name="inicio_painel_ajustes">Ajustes</string>
 </resources>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- A tela inicial: menu no topo, o título focado em destaque com a imagem
-     dele ao fundo, e as fileiras embaixo — o jeito de toda TV. -->
+<!-- A tela inicial: o painel (busca, relógio, Continuar ao vivo e os atalhos) em cima, com a imagem do título
+     focado ao fundo, e as fileiras embaixo. Fundo escuro neutro, só nesta tela. -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent">
+    android:background="#121116">
 
     <!-- Imagem do título focado e os degradês que a escurecem: aparecem
          juntos, e sem título focado fica só o fundo do app. -->
@@ -35,42 +35,184 @@
         android:clipChildren="false"
         android:orientation="vertical">
 
-        <!-- O destaque: o que está focado agora. -->
+        <!-- O painel: topo com o nome, a busca e o relógio; o bloco grande (Continuar ao vivo, com o que passa
+             agora pelo guia) e os quatro atalhos ao lado. -->
+        <LinearLayout
+            android:id="@+id/inicioPainel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginTop="2dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/inicio_painel_nome"
+                    android:textColor="@color/text_primary"
+                    android:textSize="22sp" />
+                <TextView
+                    android:id="@+id/inicioBusca"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_busca_inicio"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/inicio_painel_buscar"
+                    android:textColor="#B4B2A9"
+                    android:textSize="15sp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/inicioHora"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/text_primary"
+                        android:textSize="26sp" />
+                    <TextView
+                        android:id="@+id/inicioData"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#B4B2A9"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="170dp"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:id="@+id/inicioContinuar"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.6"
+                    android:background="@drawable/bloco_inicio_principal"
+                    android:focusable="true">
+                    <ImageView
+                        android:id="@+id/inicioContinuarLogo"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_gravity="top|end"
+                        android:layout_margin="16dp"
+                        android:background="@drawable/bg_logo_inicio"
+                        android:contentDescription="@null"
+                        android:padding="6dp"
+                        android:scaleType="fitCenter"
+                        android:visibility="gone" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:orientation="vertical"
+                        android:padding="18dp">
+                        <TextView
+                            android:id="@+id/inicioContinuarRotulo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="6dp"
+                            android:textColor="#CECBF6"
+                            android:textSize="15sp" />
+                        <TextView
+                            android:id="@+id/inicioContinuarCanal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:ellipsize="end"
+                            android:fontFamily="sans-serif-medium"
+                            android:maxLines="1"
+                            android:textColor="@color/text_primary"
+                            android:textSize="26sp" />
+                        <TextView
+                            android:id="@+id/inicioContinuarPrograma"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textColor="#CECBF6"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/inicioProgramacao"
+                            style="@style/BlocoInicio"
+                            android:text="@string/inicio_painel_programacao" />
+                        <TextView
+                            android:id="@+id/inicioEventos"
+                            style="@style/BlocoInicio"
+                            android:layout_marginStart="12dp"
+                            android:text="@string/inicio_painel_eventos" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/inicioFavoritos"
+                            style="@style/BlocoInicio"
+                            android:text="@string/inicio_painel_favoritos" />
+                        <TextView
+                            android:id="@+id/inicioAjustes"
+                            style="@style/BlocoInicio"
+                            android:layout_marginStart="12dp"
+                            android:text="@string/inicio_painel_ajustes" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- O destaque antigo (título, informações e sinopse do item focado) fica escondido: a imagem do item
+             focado continua ao fundo, e quem mostrava o texto segue funcionando sem aparecer. -->
         <LinearLayout
             android:id="@+id/inicioDestaque"
             android:layout_width="620dp"
-            android:layout_height="150dp"
-            android:layout_marginStart="56dp"
-            android:layout_marginTop="4dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
             <TextView
                 android:id="@+id/inicioTitulo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:fontFamily="sans-serif-medium"
-                android:maxLines="1"
-                android:textColor="@color/text_primary"
-                android:textSize="32sp" />
+                android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/inicioMeta"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/accent"
-                android:textSize="17sp" />
+                android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/inicioSinopse"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:ellipsize="end"
-                android:lineSpacingMultiplier="1.15"
-                android:maxLines="2"
-                android:textColor="#D9FFFFFF"
-                android:textSize="16sp" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <br.com.saimo.tv.ListaSemFuga
@@ -80,6 +222,7 @@
             android:layout_weight="1"
             android:clipChildren="true"
             android:clipToPadding="false"
+            android:layout_marginTop="10dp"
             android:paddingStart="30dp"
             android:paddingBottom="120dp" />
     </LinearLayout>

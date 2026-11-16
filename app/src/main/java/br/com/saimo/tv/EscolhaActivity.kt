@@ -51,6 +51,14 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
     private lateinit var titulo: TextView
     private lateinit var meta: TextView
     private lateinit var sinopse: TextView
+    private lateinit var painelHora: TextView
+    private lateinit var painelData: TextView
+    private lateinit var continuar: View
+    private lateinit var continuarRotulo: TextView
+    private lateinit var continuarCanal: TextView
+    private lateinit var continuarPrograma: TextView
+    private lateinit var continuarLogo: ImageView
+    private val dataDoPainel = SimpleDateFormat("EEE, d 'de' MMM", Locale("pt", "BR"))
     private val atualizacao by lazy { OfertaDeAtualizacao(this) { mostrarStatus(it) } }
     private var jaIniciou = false
     private val handler = Handler(Looper.getMainLooper())
@@ -73,6 +81,7 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         titulo = findViewById(R.id.inicioTitulo)
         meta = findViewById(R.id.inicioMeta)
         sinopse = findViewById(R.id.inicioSinopse)
+        montarPainel()
 
         filas.layoutManager = Inicio.Filas(this)
         filas.adapter = adaptador
@@ -197,7 +206,7 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> {
                 val focado = currentFocus
-                if (focado == null || !filas.hasFocus()) {
+                if (focado == null || MenuGlobal.temFoco(barraMenu)) {
                     MenuGlobal.focar(barraMenu, Aba.INICIO)
                     return true
                 }
@@ -262,6 +271,89 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         return true
     }
 
+    // MARK: - Painel
+
+    /** O painel do topo: cada bloco abre a sua tela; focar um deles tira do fundo a imagem do item das fileiras. */
+    private fun montarPainel() {
+        painelHora = findViewById(R.id.inicioHora)
+        painelData = findViewById(R.id.inicioData)
+        continuar = findViewById(R.id.inicioContinuar)
+        continuarRotulo = findViewById(R.id.inicioContinuarRotulo)
+        continuarCanal = findViewById(R.id.inicioContinuarCanal)
+        continuarPrograma = findViewById(R.id.inicioContinuarPrograma)
+        continuarLogo = findViewById(R.id.inicioContinuarLogo)
+        icone(continuarRotulo, R.drawable.ic_play, 18, 0xFFCECBF6.toInt())
+        val busca = findViewById<TextView>(R.id.inicioBusca)
+        icone(busca, R.drawable.ic_search, 20, 0xFFB4B2A9.toInt())
+        busca.setOnClickListener { BuscaActivity.abrir(this) }
+        continuar.setOnClickListener {
+            val ultimo = Preferencias.ultimoCanal
+            if (ultimo == null) abrirAoVivo()
+            else startActivity(Intent(this, MainActivity::class.java).putExtra(MainActivity.EXTRA_CANAL, ultimo))
+        }
+        val blocos = listOf(
+            Triple(R.id.inicioProgramacao, R.drawable.ic_guide) { startActivity(Intent(this, GuideActivity::class.java)) },
+            Triple(R.id.inicioEventos, R.drawable.ic_football) { startActivity(Intent(this, EventosActivity::class.java)) },
+            Triple(R.id.inicioFavoritos, R.drawable.ic_star) { startActivity(GradeActivity.intent(this, GradeActivity.FAVORITOS)) },
+            Triple(R.id.inicioAjustes, R.drawable.ic_settings) { startActivity(Intent(this, AjustesActivity::class.java)) },
+        )
+        for ((id, desenho, abrir) in blocos) {
+            val bloco = findViewById<TextView>(id)
+            icone(bloco, desenho, 24, 0xFFFFFFFF.toInt())
+            bloco.setOnClickListener { abrir() }
+        }
+        val aoFocar = View.OnFocusChangeListener { _, foco -> if (foco) cabecalhoPadrao() }
+        for (id in listOf(R.id.inicioBusca, R.id.inicioContinuar, R.id.inicioProgramacao, R.id.inicioEventos,
+                R.id.inicioFavoritos, R.id.inicioAjustes)) findViewById<View>(id).onFocusChangeListener = aoFocar
+        atualizarPainel()
+        handler.post(tiquePainel)
+    }
+
+    /** A cada 30 s: a hora, a data e o que passa agora no último canal (o programa troca sozinho). */
+    private val tiquePainel = object : Runnable {
+        override fun run() {
+            atualizarPainel()
+            handler.postDelayed(this, 30_000)
+        }
+    }
+
+    private fun atualizarPainel() {
+        if (!::painelHora.isInitialized) return
+        val agora = Date()
+        painelHora.text = hora.format(agora)
+        painelData.text = dataDoPainel.format(agora).replaceFirstChar { it.uppercase() }
+        val ultimo = Preferencias.ultimoCanal
+        if (ultimo == null) {
+            continuarRotulo.text = getString(R.string.inicio_painel_ao_vivo)
+            continuarCanal.text = getString(R.string.inicio_painel_escolher)
+            continuarPrograma.text = ""
+            continuarLogo.visibility = View.GONE
+            return
+        }
+        continuarRotulo.text = getString(R.string.inicio_painel_continuar)
+        continuarCanal.text = ultimo
+        val programa = Epg.nowNext(ultimo, agora.time)?.first
+        continuarPrograma.text = if (programa == null) getString(R.string.inicio_painel_sem_guia)
+            else getString(R.string.inicio_painel_ate, programa.title, hora.format(Date(programa.stop)))
+        val logo = MinhasListas.somar(Remote.channels, false).firstOrNull { it.name == ultimo }?.logo
+        if (logo.isNullOrEmpty()) {
+            continuarLogo.visibility = View.GONE
+        } else if (continuarLogo.tag != logo) {
+            continuarLogo.tag = logo
+            continuarLogo.visibility = View.VISIBLE
+            continuarLogo.load(logo)
+        }
+    }
+
+    /** Ícone à esquerda do texto, no tamanho e na cor pedidos. */
+    private fun icone(texto: TextView, desenho: Int, dp: Int, cor: Int) {
+        val d = ContextCompat.getDrawable(this, desenho)?.mutate() ?: return
+        val px = (dp * resources.displayMetrics.density).toInt()
+        d.setBounds(0, 0, px, px)
+        d.setTint(cor)
+        texto.setCompoundDrawablesRelative(d, null, null, null)
+    }
+
     override fun onDestroy() {
         handler.removeCallbacksAndMessages(null)
         abertura?.liberar()
@@ -274,6 +366,8 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
 
     private fun focarPrimeiro(tentativas: Int = 10) {
         filas.scrollToPosition(0)
+        // O painel é o começo da tela: o foco vai ao bloco grande (Continuar ao vivo).
+        if (::continuar.isInitialized && continuar.isShown && continuar.requestFocus()) return
         filas.post {
             val fileira = filas.findViewHolderForAdapterPosition(0)?.itemView
             val capas = fileira?.findViewById<RecyclerView>(R.id.filaCapas)
@@ -315,6 +409,7 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         }
         addonsVersaoVista = AddonsStore.versao.value
         mostrarFilas(lista)
+        atualizarPainel()
     }
 
     private fun mostrarFilas(lista: List<Inicio.Fila>) {

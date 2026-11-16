@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A busca no topo do Início: uma pílula discreta; focada, contorno branco. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#33FFFFFF" />
+            <stroke android:width="2dp" android:color="#FFFFFF" />
+            <corners android:radius="22dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#14FFFFFF" />
+            <stroke android:width="1dp" android:color="#33FFFFFF" />
+            <corners android:radius="22dp" />
+        </shape>
+    </item>
+</selector>
