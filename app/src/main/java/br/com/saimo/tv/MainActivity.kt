@@ -459,7 +459,7 @@ class MainActivity : AppCompatActivity(), Connect.Listener, Painel.Ouvinte {
 
     /**
      * Canal pedido pelo nome (link saimo://canal?n=…). Ignora acentos, maiúsculas e qualidade
-     * ("Band" acha "BAND FHD"); entre versões do mesmo canal prefere FHD, depois 4K, depois HD, e
+     * ("Band" acha "BAND FHD"); entre versões do mesmo canal prefere 4K, depois FHD, depois HD, e
      * deixa H.265 por último. Com a qualidade no pedido ("Band 4K"), abre essa versão. Sem nome igual, aceita um que comece com o pedido ("Band" → "Band SP").
      * Sem nenhum, -1: antes qualquer pedaço do nome servia e o link caía em outro canal.
      */

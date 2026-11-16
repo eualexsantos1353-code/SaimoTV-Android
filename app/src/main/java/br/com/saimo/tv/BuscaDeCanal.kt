@@ -24,15 +24,14 @@ internal object BuscaDeCanal {
     fun completo(nome: String): String = palavras(nome).joinToString(" ")
 
     /**
-     * Versão preferida quando o pedido não diz a qualidade: FHD (0), 4K (1), HD (2), sem marca (3),
-     * SD (4). O 4K vem depois do FHD porque pesa bem mais na internet e trava antes; para abrir o
-     * 4K, peça com a qualidade no nome (saimo://canal?n=Band%204K).
+     * Versão preferida quando o pedido não diz a qualidade: 4K (0), FHD (1), HD (2), sem marca (3),
+     * SD (4). Para abrir outra versão, peça com a qualidade no nome (saimo://canal?n=Band%20FHD).
      */
     fun qualidade(nome: String): Int {
         val p = palavras(nome)
         return when {
-            p.any { it in FULL_HD } -> 0
-            p.any { it in ULTRA } -> 1
+            p.any { it in ULTRA } -> 0
+            p.any { it in FULL_HD } -> 1
             "hd" in p -> 2
             "sd" in p -> 4
             else -> 3
