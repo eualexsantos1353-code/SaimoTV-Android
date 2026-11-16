@@ -458,32 +458,12 @@ class MainActivity : AppCompatActivity(), Connect.Listener, Painel.Ouvinte {
     private var ultimaPosicao = -1L
 
     /**
-     * Canal pedido pelo nome (link saimo://canal?n=…). Ignora acentos, maiúsculas e qualidade
-     * ("Band" acha "BAND FHD"); entre versões do mesmo canal prefere 4K, depois FHD, depois HD, e
-     * deixa H.265 por último. Com a qualidade no pedido ("Band 4K"), abre essa versão. Sem nome igual, aceita um que comece com o pedido ("Band" → "Band SP").
-     * Sem nenhum, -1: antes qualquer pedaço do nome servia e o link caía em outro canal.
+     * Canal pedido pelo nome (link saimo://canal?n=…), pela mesma busca de [BuscaDeCanal.encontrar]
+     * (que diz também como o nome bateu). Sem nenhum, -1: antes qualquer pedaço do nome servia e o
+     * link caía em outro canal.
      */
-    private fun encontrarIndiceCanal(nome: String): Int {
-        val exato = ordered.indexOfFirst { it.name.equals(nome, ignoreCase = true) }
-        if (exato >= 0) return exato
-        // Pedido com a qualidade ("Band 4K"): a versão exata, se existir
-        val inteiro = BuscaDeCanal.completo(nome)
-        val mesmoInteiro = ordered.indexOfFirst { BuscaDeCanal.completo(it.name) == inteiro }
-        if (inteiro.isNotEmpty() && mesmoInteiro >= 0) return mesmoInteiro
-        val pedido = BuscaDeCanal.base(nome)
-        if (pedido.isEmpty()) return -1
-        val bases = ordered.map { BuscaDeCanal.base(it.name) }
-        fun melhor(indices: List<Int>): Int = indices.minWithOrNull(compareBy<Int>(
-            { BuscaDeCanal.qualidade(ordered[it].name) },
-            { BuscaDeCanal.hevc(ordered[it].name) },
-            { ordered[it].name.length },
-        )) ?: -1
-        val iguais = bases.indices.filter { bases[it] == pedido }
-        if (iguais.isNotEmpty()) return melhor(iguais)
-        val comecam = bases.indices.filter { bases[it].startsWith("$pedido ") }
-        if (comecam.isNotEmpty()) return melhor(comecam)
-        return -1
-    }
+    private fun encontrarIndiceCanal(nome: String): Int =
+        BuscaDeCanal.encontrar(ordered.map { it.name }, nome)?.indice ?: -1
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)

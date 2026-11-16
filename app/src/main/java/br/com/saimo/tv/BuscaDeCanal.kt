@@ -40,4 +40,47 @@ internal object BuscaDeCanal {
 
     /** Versão H.265 vai depois da H.264 do mesmo canal */
     fun hevc(nome: String): Int = if (palavras(nome).any { it == "h265" || it == "hevc" }) 1 else 0
+
+    /** Como o nome pedido bateu com o canal da lista, do mais certo ao menos certo. */
+    enum class Tipo {
+        /** O mesmo nome, só com maiúsculas diferentes */
+        IGUAL,
+        /** O mesmo nome com a qualidade ("Band 4K" acha "BAND 4K [H265]") */
+        COMPLETO,
+        /** O mesmo canal em outra qualidade ("Band" acha "BAND 4K") */
+        BASE,
+        /** Só um canal que começa com o pedido ("Band" acha "Band SP"): pode ser outro canal */
+        COMECO,
+    }
+
+    /** O canal achado: a posição dele em `nomes` e como bateu. */
+    class Achado(val indice: Int, val tipo: Tipo)
+
+    /**
+     * O canal pedido pelo nome (link saimo://canal?n=…) entre os [nomes] da lista, na ordem da tela, ou
+     * null. Ignora acentos, maiúsculas e qualidade; entre versões do mesmo canal fica com a preferida por
+     * [qualidade] e deixa H.265 por último. Com a qualidade no pedido ("Band 4K"), essa versão. Sem nome
+     * igual, aceita um que comece com o pedido ("Band" → "Band SP"), e diz isso no [Tipo].
+     */
+    fun encontrar(nomes: List<String>, pedido: String): Achado? {
+        val exato = nomes.indexOfFirst { it.equals(pedido, ignoreCase = true) }
+        if (exato >= 0) return Achado(exato, Tipo.IGUAL)
+        // Pedido com a qualidade ("Band 4K"): a versão exata, se existir
+        val inteiro = completo(pedido)
+        val mesmoInteiro = nomes.indexOfFirst { completo(it) == inteiro }
+        if (inteiro.isNotEmpty() && mesmoInteiro >= 0) return Achado(mesmoInteiro, Tipo.COMPLETO)
+        val alvo = base(pedido)
+        if (alvo.isEmpty()) return null
+        val bases = nomes.map { base(it) }
+        fun melhor(indices: List<Int>): Int = indices.minWithOrNull(compareBy<Int>(
+            { qualidade(nomes[it]) },
+            { hevc(nomes[it]) },
+            { nomes[it].length },
+        )) ?: -1
+        val iguais = bases.indices.filter { bases[it] == alvo }
+        if (iguais.isNotEmpty()) return Achado(melhor(iguais), Tipo.BASE)
+        val comecam = bases.indices.filter { bases[it].startsWith("$alvo ") }
+        if (comecam.isNotEmpty()) return Achado(melhor(comecam), Tipo.COMECO)
+        return null
+    }
 }
