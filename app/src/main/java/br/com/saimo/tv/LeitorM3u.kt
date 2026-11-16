@@ -28,6 +28,8 @@ object LeitorM3u {
         val grupo: String?,
         val logo: String?,
         val fontes: List<FonteM3u>,
+        /// tvg-id: o código do canal no guia (XMLTV) da lista; nulo quando a lista não informa.
+        val tvgId: String? = null,
     )
 
     private val TAG_RUIM = Pattern.compile(
@@ -97,6 +99,7 @@ object LeitorM3u {
 
     private class Montagem(
         var nome: String, var grupo: String?, var logo: String?, val fontes: MutableList<FonteM3u>,
+        var tvgId: String? = null,
     )
 
     fun ler(textoOriginal: String): List<CanalM3u> = try {
@@ -182,18 +185,20 @@ object LeitorM3u {
                 opts["ua"]?.ifEmpty { null } ?: extra["user-agent"]?.ifEmpty { null },
                 keyId, key, qual)
             val k = chave(nome)
+            val tvg = p.tvgId?.trim()?.ifEmpty { null }
             val c = indice[k]
             if (c != null) {
                 if (c.fontes.none { it.url == url }) c.fontes.add(fonte)
                 c.grupo = c.grupo ?: grupo
                 c.logo = c.logo ?: logo
+                c.tvgId = c.tvgId ?: tvg
             } else if (canais.size < LIMITE_CANAIS) {
-                val novo = Montagem(nome, grupo, logo, mutableListOf(fonte))
+                val novo = Montagem(nome, grupo, logo, mutableListOf(fonte), tvg)
                 indice[k] = novo
                 canais.add(novo)
             }
             pend = null; opts = HashMap()
         }
-        return canais.map { CanalM3u(it.nome, it.grupo, it.logo, it.fontes.toList()) }
+        return canais.map { CanalM3u(it.nome, it.grupo, it.logo, it.fontes.toList(), it.tvgId) }
     }
 }

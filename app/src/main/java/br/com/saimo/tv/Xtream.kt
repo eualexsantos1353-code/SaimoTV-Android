@@ -124,10 +124,12 @@ object Xtream {
                 LeitorM3u.FonteM3u(conta.canal(id, "m3u8")),
                 LeitorM3u.FonteM3u(conta.canal(id, "ts")),
             )
+            val tvg = texto(o, "epg_channel_id").ifEmpty { null }   // o código do canal no guia (xmltv.php)
             val k = LeitorM3u.chave(nome)
             val antigo = porNome[k]
-            porNome[k] = if (antigo == null) LeitorM3u.CanalM3u(nome, grupo, logo, fontes)
-            else antigo.copy(grupo = antigo.grupo ?: grupo, logo = antigo.logo ?: logo, fontes = antigo.fontes + fontes)
+            porNome[k] = if (antigo == null) LeitorM3u.CanalM3u(nome, grupo, logo, fontes, tvg)
+            else antigo.copy(grupo = antigo.grupo ?: grupo, logo = antigo.logo ?: logo, fontes = antigo.fontes + fontes,
+                tvgId = antigo.tvgId ?: tvg)
         }
         return porNome.values.toList()
     }

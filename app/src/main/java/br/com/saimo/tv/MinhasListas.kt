@@ -93,7 +93,7 @@ object MinhasListas {
                 .put("ua", f.ua ?: JSONObject.NULL).put("keyId", f.keyId ?: JSONObject.NULL)
                 .put("key", f.key ?: JSONObject.NULL).put("qualidade", f.qualidade ?: JSONObject.NULL))
             a.put(JSONObject().put("nome", c.nome).put("grupo", c.grupo ?: JSONObject.NULL)
-                .put("logo", c.logo ?: JSONObject.NULL).put("fontes", fs))
+                .put("logo", c.logo ?: JSONObject.NULL).put("fontes", fs).put("tvg", c.tvgId ?: JSONObject.NULL))
         }
         File(pasta(), "$id.json").writeText(a.toString())
     }
@@ -107,7 +107,7 @@ object MinhasListas {
             LeitorM3u.CanalM3u(o.getString("nome"), s(o, "grupo"), s(o, "logo"), (0 until fs.length()).map { j ->
                 val f = fs.getJSONObject(j)
                 LeitorM3u.FonteM3u(f.getString("url"), s(f, "referer"), s(f, "ua"), s(f, "keyId"), s(f, "key"), s(f, "qualidade"))
-            })
+            }, s(o, "tvg"))   // listas salvas antes do tvg-id: nulo até o próximo Atualizar
         }
     }.getOrDefault(emptyList())
 
@@ -122,7 +122,7 @@ object MinhasListas {
             for (c in lerCanais(l.id)) {
                 val canal = Channel(c.nome, c.logo, c.fontes.map {
                     Source(it.url, it.referer, it.ua, it.keyId, it.key, it.qualidade)
-                }, CATEGORIA)
+                }, CATEGORIA, c.tvgId)
                 if (LeitorM3u.ehRestrito(c.grupo, c.nome)) restritos += canal else canais += canal
             }
             Lida(l, canais, restritos)

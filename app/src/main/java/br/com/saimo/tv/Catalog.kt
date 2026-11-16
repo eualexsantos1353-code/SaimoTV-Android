@@ -26,4 +26,6 @@ data class Channel(
     val logo: String? = null,
     val sources: List<Source>,
     val categoria: String? = null,
+    /// O código do canal no guia da própria lista (tvg-id do M3U, epg_channel_id do Xtream), quando ela informa.
+    val tvgId: String? = null,
 )
