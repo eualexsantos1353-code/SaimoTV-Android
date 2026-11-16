@@ -4,7 +4,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121116">
+    android:background="@drawable/bg_inicio">
 
     <!-- Imagem do título focado e os degradês que a escurecem: aparecem
          juntos, e sem título focado fica só o fundo do app. -->

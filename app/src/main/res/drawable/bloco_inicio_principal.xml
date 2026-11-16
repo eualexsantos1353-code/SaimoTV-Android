@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- O bloco grande do Início (Continuar ao vivo): roxo; focado, mais claro e com contorno branco. -->
+<!-- O bloco grande do Início (banner): vidro roxo escuro com borda clara; focado, contorno branco. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="#534AB7" />
-            <stroke android:width="3dp" android:color="#FFFFFF" />
-            <corners android:radius="20dp" />
+            <gradient android:angle="315" android:startColor="#FF4A2F9A" android:endColor="#FF2A1A62" />
+            <stroke android:width="3dp" android:color="#FFFFFFFF" />
+            <corners android:radius="22dp" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#3C3489" />
-            <corners android:radius="20dp" />
+            <gradient android:angle="315" android:startColor="#FF35217A" android:endColor="#FF1A1040" />
+            <stroke android:width="1.5dp" android:color="#66B993FF" />
+            <corners android:radius="22dp" />
         </shape>
     </item>
 </selector>

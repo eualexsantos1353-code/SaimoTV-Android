@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Os blocos do painel do Início (Programação, Ajustes, Eventos, Favoritos): grafite; focado, mais claro e com
-     contorno branco, legível do outro lado da sala. -->
+<!-- Os atalhos do painel do Início: vidro escuro com borda fina; focado, mais claro e com contorno branco,
+     legível do outro lado da sala. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="#3A393F" />
-            <stroke android:width="3dp" android:color="#FFFFFF" />
-            <corners android:radius="16dp" />
+            <gradient android:angle="315" android:startColor="#FF3A2575" android:endColor="#FF22164A" />
+            <stroke android:width="3dp" android:color="#FFFFFFFF" />
+            <corners android:radius="18dp" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#26252B" />
-            <corners android:radius="16dp" />
+            <gradient android:angle="315" android:startColor="#FF1D1438" android:endColor="#FF120C26" />
+            <stroke android:width="1dp" android:color="#33FFFFFF" />
+            <corners android:radius="18dp" />
         </shape>
     </item>
 </selector>
