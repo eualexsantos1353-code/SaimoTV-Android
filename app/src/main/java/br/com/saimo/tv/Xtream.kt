@@ -77,6 +77,10 @@ object Xtream {
         return Conta(base, u, s)
     }
 
+    /** O guia de programação (XMLTV) da conta: `xmltv.php` no mesmo servidor, com o mesmo usuário e senha. */
+    fun guia(conta: Conta): String =
+        conta.base + "/xmltv.php?username=" + cod(conta.usuario) + "&password=" + cod(conta.senha)
+
     // MARK: - Resposta da API (sem rede: testável)
 
     private fun texto(o: JSONObject, k: String): String = o.opt(k)?.let {

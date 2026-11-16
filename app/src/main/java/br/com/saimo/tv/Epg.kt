@@ -134,8 +134,11 @@ object Epg {
     }
 
     private suspend fun carregar(context: Context, onReady: () -> Unit) {
-        // Sem endereço da lista de canais não há o que consultar.
-        if (Enderecos.canais == null || Remote.channels.isEmpty()) return
+        // Sem o catálogo publicado (a versão pessoal), o guia vem das Minhas listas.
+        if (Enderecos.canais == null || Remote.channels.isEmpty()) {
+            carregarDasMinhasListas(context, onReady)
+            return
+        }
         GuiaTabelas.carregarCache(context)
         // O guia já na memória vale: reler o cache (uns 7 MB de JSON) a cada
         // abertura do Ao vivo era 1,5 s e dezenas de MB de lixo no TV Box de
@@ -224,6 +227,53 @@ object Epg {
         if (merged.isEmpty()) return
         writeCache(context, merged)
     }
+
+    /**
+     * O guia das Minhas listas: cada conta Xtream tem o seu (`xmltv.php`), e os canais casam pelo código que a lista
+     * informa (tvg-id / epg_channel_id), nunca pelo nome. As versões do mesmo canal (4K, FHD...) dividem a grade. Fica
+     * no mesmo cache do guia, com assinatura própria, e é refeito a cada 6 horas ou quando as listas mudam.
+     */
+    private suspend fun carregarDasMinhasListas(context: Context, onReady: () -> Unit) {
+        val guias = MinhasListas.guias()
+        if (guias.isEmpty()) return
+        if (byChannel.isEmpty()) readCache(context)?.let { byChannel = it }
+        if (byChannel.isNotEmpty()) withContext(Dispatchers.Main) { onReady() }
+        val assinatura = assinaturaDasListas(guias)
+        val stale = cacheAge(context) > CACHE_TTL_MS || byChannel.isEmpty() || readSignature(context) != assinatura
+        if (!stale) return
+        val from = System.currentTimeMillis() - PAST_WINDOW_MS
+        val to = System.currentTimeMillis() + if (Aparelho.poucaMemoria) LEVE_WINDOW_MS else FUTURE_WINDOW_MS
+        val merged = LinkedHashMap<String, List<Programme>>()
+        for (guia in guias) {
+            val ids = guia.canaisPorId.mapValues { it.value.first() }
+            // Lido em fluxo, guardando só os canais da lista: o XMLTV de um painel passa de dezenas de MB.
+            val lido = runCatching { parseFeed(guia.url, emptyList(), from, to, HashMap(), ids) }.getOrNull() ?: continue
+            juntarPorCodigo(merged, guia.canaisPorId, lido)
+            if (merged.isNotEmpty()) {
+                byChannel = LinkedHashMap(merged)
+                withContext(Dispatchers.Main) { onReady() }
+            }
+        }
+        if (merged.isEmpty()) return
+        writeCache(context, merged)
+        runCatching { signatureFile(context).writeText(assinatura) }
+    }
+
+    /** A grade lida (pelo primeiro nome de cada código) vai para todas as versões do canal; a primeira grade vale. */
+    internal fun juntarPorCodigo(
+        destino: MutableMap<String, List<Programme>>, canaisPorId: Map<String, List<String>>,
+        lido: Map<String, List<Programme>>,
+    ) {
+        for ((_, nomes) in canaisPorId) {
+            val programas = lido[nomes.first()]?.takeIf { it.isNotEmpty() } ?: continue
+            for (nome in nomes) if (destino[nome] == null) destino[nome] = programas
+        }
+    }
+
+    /** Muda quando muda a conta ou os canais com código; não guarda o link (só um número tirado dele). */
+    private fun assinaturaDasListas(guias: List<MinhasListas.Guia>): String =
+        "minhas-v1:" + guias.joinToString("|") { it.url }.hashCode() + ":" +
+            guias.flatMap { it.canaisPorId.entries }.joinToString("|") { it.key + "=" + it.value.joinToString(",") }.hashCode()
 
     /**
      * meuguia publica só título e gênero. Casando por título, os feeds trazem o

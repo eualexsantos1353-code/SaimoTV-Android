@@ -158,6 +158,29 @@ object MinhasListas {
         return base + fora
     }
 
+    /** Um guia (XMLTV) e os canais que ele cobre, pelo código: tvg-id -> nomes (as versões do canal na tela). */
+    class Guia(val url: String, val canaisPorId: Map<String, List<String>>)
+
+    /**
+     * Os guias das listas ativas: o das contas Xtream (`xmltv.php` no mesmo servidor). Os canais são os desta seção
+     * que o Ao vivo mostra, com o nome que ele usa, e só os que têm código (o casamento é pelo código, nunca pelo
+     * nome). O link leva usuário e senha: nunca é mostrado nem registrado.
+     */
+    fun guias(): List<Guia> {
+        if (listas.isEmpty()) return emptyList()
+        val urls = listas.filter { it.ativa }
+            .mapNotNull { l -> l.link?.let { Xtream.deLink(it) }?.let { Xtream.guia(it) } }.distinct()
+        if (urls.isEmpty()) return emptyList()
+        val porId = LinkedHashMap<String, MutableList<String>>()
+        for (c in somar(Unlock.channels(), Unlock.unlocked)) {
+            if (c.categoria != CATEGORIA) continue
+            val id = c.tvgId ?: continue
+            porId.getOrPut(id) { mutableListOf() } += c.name
+        }
+        if (porId.isEmpty()) return emptyList()
+        return urls.map { Guia(it, porId) }
+    }
+
     /** Os canais que o Ao vivo mostra: a lista publicada (se há) mais as listas da pessoa. */
     fun canaisDaTela(): List<Channel> = somar(Unlock.channels(), Unlock.unlocked)
 
