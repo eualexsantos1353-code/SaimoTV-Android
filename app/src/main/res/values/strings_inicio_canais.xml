@@ -6,4 +6,7 @@
     <string name="e1_canais_favoritos">Favoritos</string>
     <string name="e1_ver_todos">Ver todos ›</string>
     <string name="e1_ao_vivo">AO VIVO</string>
+    <string name="e1_jogos">Jogos</string>
+    <string name="e1_encerrado">Encerrado</string>
+    <string name="e1_jogo_sem_canal">Este jogo ainda não tem canal ligado</string>
 </resources>

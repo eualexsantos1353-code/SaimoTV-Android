@@ -333,6 +333,7 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
     private val tiquePainel = object : Runnable {
         override fun run() {
             atualizarPainel()
+            atualizarJogos()
             handler.postDelayed(this, 30_000)
         }
     }
@@ -429,13 +430,14 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         // ler as fichas (3,7 MB) leva até 2 s num TV Box lento, e a tela
         // ficava vazia esse tempo todo. As capas dos destaques chegam depois.
         if (!Generos.prontos) {
-            val locais = listOfNotNull(continuar(), aoVivo(), favoritos())
+            val locais = listOfNotNull(aoVivo(), jogos(), favoritos())
             if (locais.isNotEmpty()) mostrarFilas(locais)
             Generos.carregar(this)
         }
         val lista = mutableListOf<Inicio.Fila>()
-        continuar()?.let { lista += it }
+        // Canais e Jogos abrem a tela; o "continuar" ficou só no bloco grande do painel.
         aoVivo()?.let { lista += it }
+        jogos()?.let { lista += it }
         favoritos()?.let { lista += it }
         for (fila in Destaques.filas(this)) {
             val cartoes = fila.itens.map { cartaoDe(it) }
@@ -553,6 +555,37 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
             },
             aoVerTodos = { abrirAoVivo() },
         )
+    }
+
+    private val dataDoJogo = SimpleDateFormat("dd/MM HH:mm", Locale("pt", "BR"))
+
+    /**
+     * A fileira Jogos: ao vivo primeiro, depois os próximos e os que acabaram há pouco. Só placar e
+     * horário (a ESPN não diz o canal), então tocar num jogo ainda não abre transmissão.
+     */
+    private fun jogos(): Inicio.Fila? {
+        val lista = JogosInicio.jogos
+        if (lista.isEmpty()) return null
+        return Inicio.Fila(getString(R.string.e1_jogos), lista.map { j ->
+            val vivo = j.estado == "in"
+            val selo = when {
+                vivo -> listOf(getString(R.string.e1_ao_vivo), j.placar).filter { it.isNotBlank() }.joinToString("  ")
+                j.estado == "post" -> listOf(getString(R.string.e1_encerrado), j.placar).filter { it.isNotBlank() }.joinToString("  ")
+                else -> dataDoJogo.format(Date(j.inicio))
+            }
+            Inicio.Cartao(
+                titulo = j.titulo, capa = "", inicial = j.casa.take(1),
+                subtitulo = j.liga,
+                colagem = listOf(j.casaLogo, j.foraLogo, j.ligaLogo),
+                selo = selo, seloAoVivo = vivo,
+            ) {
+                Toast.makeText(this, R.string.e1_jogo_sem_canal, Toast.LENGTH_SHORT).show()
+            }
+        }, Inicio.Tipo.EVENTO)
+    }
+
+    private fun atualizarJogos() {
+        lifecycleScope.launch(semDerrubar) { if (JogosInicio.atualizar()) montarFilas() }
     }
 
     private fun favoritos(): Inicio.Fila? {
