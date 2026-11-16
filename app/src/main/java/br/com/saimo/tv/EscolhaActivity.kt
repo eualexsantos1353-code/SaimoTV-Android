@@ -59,6 +59,7 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
     private lateinit var continuarCanal: TextView
     private lateinit var continuarPrograma: TextView
     private lateinit var continuarLogo: ImageView
+    private lateinit var menuLateral: MenuLateral
     private val dataDoPainel = SimpleDateFormat("EEE, d 'de' MMM", Locale("pt", "BR"))
     private val atualizacao by lazy { OfertaDeAtualizacao(this) { mostrarStatus(it) } }
     private var jaIniciou = false
@@ -70,7 +71,7 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
 
     private val adaptador by lazy {
         Inicio.Adapter(escopo = lifecycleScope, capaDe = { t, s -> Generos.capa(t, s) },
-            aoFocar = { mostrarDestaque(it) })
+            aoFocar = { mostrarDestaque(it) }, aoSairPelaEsquerda = { menuLateral.focar() })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +86,7 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         meta = findViewById(R.id.inicioMeta)
         sinopse = findViewById(R.id.inicioSinopse)
         montarPainel()
+        montarMenuLateral()
 
         filas.layoutManager = Inicio.Filas(this)
         filas.adapter = adaptador
@@ -309,6 +311,23 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
                 R.id.inicioFavoritos, R.id.inicioAjustes)) findViewById<View>(id).onFocusChangeListener = aoFocar
         atualizarPainel()
         handler.post(tiquePainel)
+    }
+
+    /**
+     * O menu lateral: só ícones; com o foco abre e mostra os nomes. A seta para a esquerda chega nele
+     * a partir da busca, do bloco grande e do começo de cada fileira; para a direita ele volta ao bloco grande.
+     */
+    private fun montarMenuLateral() {
+        menuLateral = MenuLateral(this, findViewById(R.id.inicioMenu), listOf(
+            MenuLateral.Item(R.string.menu_inicio, R.drawable.ic_home, atual = true) { focarPainel() },
+            MenuLateral.Item(R.string.menu_ao_vivo, R.drawable.ic_live_tv) { abrirAoVivo() },
+            MenuLateral.Item(R.string.menu_eventos, R.drawable.ic_football) { startActivity(Intent(this, EventosActivity::class.java)) },
+            MenuLateral.Item(R.string.menu_on_demand, R.drawable.ic_movie) { startActivity(Intent(this, OnDemandActivity::class.java)) },
+            MenuLateral.Item(R.string.vod_favoritos, R.drawable.ic_star) { startActivity(GradeActivity.intent(this, GradeActivity.FAVORITOS)) },
+            MenuLateral.Item(R.string.menu_radios, R.drawable.ic_radio) { startActivity(Intent(this, RadiosActivity::class.java)) },
+            MenuLateral.Item(R.string.menu_ajustes, R.drawable.ic_settings) { startActivity(Intent(this, AjustesActivity::class.java)) },
+        ), blocoContinuar) { cabecalhoPadrao() }
+        for (id in listOf(R.id.inicioBusca, R.id.inicioContinuar)) findViewById<View>(id).nextFocusLeftId = menuLateral.primeiroId
     }
 
     /** A cada 30 s: a hora, a data e o que passa agora no último canal (o programa troca sozinho). */

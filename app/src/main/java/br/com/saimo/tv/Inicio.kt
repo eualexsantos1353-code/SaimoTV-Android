@@ -108,6 +108,8 @@ object Inicio {
         private val capaDe: (suspend (String, Boolean) -> String?)? = null,
         /// Chamado quando um cartão ganha o foco — é o que troca o destaque.
         private val aoFocar: ((Cartao) -> Unit)? = null,
+        /// Seta para a esquerda no primeiro cartão de uma fileira: o Início leva o foco ao menu lateral.
+        private val aoSairPelaEsquerda: (() -> Unit)? = null,
     ) : RecyclerView.Adapter<Adapter.Holder>() {
 
         private var filas: List<Fila> = emptyList()
@@ -171,7 +173,7 @@ object Inicio {
         override fun onBindViewHolder(holder: Holder, position: Int) {
             val fila = filas[position]
             holder.titulo.text = fila.titulo
-            holder.capas.adapter = Capas(fila.cartoes, fila.tipo, escopo, capaDe, aoFocar)
+            holder.capas.adapter = Capas(fila.cartoes, fila.tipo, escopo, capaDe, aoFocar, aoSairPelaEsquerda)
             holder.capas.scrollToPosition(posicoes[fila.titulo] ?: 0)
             holder.capas.clearOnScrollListeners()
             holder.capas.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -192,6 +194,7 @@ object Inicio {
         private val escopo: kotlinx.coroutines.CoroutineScope?,
         private val capaDe: (suspend (String, Boolean) -> String?)?,
         private val aoFocar: ((Cartao) -> Unit)?,
+        private val aoSairPelaEsquerda: (() -> Unit)?,
     ) : RecyclerView.Adapter<Capas.Holder>() {
 
         class Holder(view: View) : RecyclerView.ViewHolder(view) {
@@ -238,6 +241,12 @@ object Inicio {
                 lista.post { lista.smoothScrollBy(0, fileira.top - lista.paddingTop) }
             }
             holder.itemView.setOnKeyListener { _, codigo, evento ->
+                // Na ponta esquerda da fileira o foco sai pelo menu lateral, se a tela tem um.
+                if (evento.action == KeyEvent.ACTION_DOWN && codigo == KeyEvent.KEYCODE_DPAD_LEFT &&
+                    holder.bindingAdapterPosition == 0 && aoSairPelaEsquerda != null) {
+                    aoSairPelaEsquerda.invoke()
+                    return@setOnKeyListener true
+                }
                 if (Cartoes.segurarNasPontas(holder, codigo, evento)) return@setOnKeyListener true
                 if (evento.action == KeyEvent.ACTION_DOWN) {
                     if (codigo == KeyEvent.KEYCODE_MENU || codigo == KeyEvent.KEYCODE_BOOKMARK) {

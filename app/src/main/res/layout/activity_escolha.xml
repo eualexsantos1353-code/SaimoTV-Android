@@ -32,6 +32,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="64dp"
         android:clipChildren="false"
         android:orientation="vertical">
 
@@ -41,7 +42,7 @@
             android:id="@+id/inicioPainel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="48dp"
+            android:layout_marginStart="18dp"
             android:layout_marginEnd="48dp"
             android:layout_marginTop="2dp"
             android:orientation="vertical">
@@ -223,9 +224,18 @@
             android:clipChildren="true"
             android:clipToPadding="false"
             android:layout_marginTop="10dp"
-            android:paddingStart="30dp"
             android:paddingBottom="120dp" />
     </LinearLayout>
+
+    <!-- O menu lateral: fechado são só os ícones (64dp); com o foco nele abre por cima do conteúdo e mostra os nomes. -->
+    <LinearLayout
+        android:id="@+id/inicioMenu"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp" />
 
     <TextView
         android:id="@+id/escolhaStatus"
