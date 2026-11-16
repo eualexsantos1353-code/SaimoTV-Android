@@ -299,16 +299,15 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
             Triple(R.id.inicioProgramacao, R.drawable.ic_guide) { startActivity(Intent(this, GuideActivity::class.java)) },
             Triple(R.id.inicioEventos, R.drawable.ic_football) { startActivity(Intent(this, EventosActivity::class.java)) },
             Triple(R.id.inicioFavoritos, R.drawable.ic_star) { startActivity(GradeActivity.intent(this, GradeActivity.FAVORITOS)) },
-            Triple(R.id.inicioAjustes, R.drawable.ic_settings) { startActivity(Intent(this, AjustesActivity::class.java)) },
         )
         for ((id, desenho, abrir) in blocos) {
             val bloco = findViewById<TextView>(id)
-            icone(bloco, desenho, 28, 0xFFFFFFFF.toInt(), emCima = true)
+            iconeLinha(bloco, desenho)
             bloco.setOnClickListener { abrir() }
         }
         val aoFocar = View.OnFocusChangeListener { _, foco -> if (foco) cabecalhoPadrao() }
         for (id in listOf(R.id.inicioBusca, R.id.inicioContinuar, R.id.inicioProgramacao, R.id.inicioEventos,
-                R.id.inicioFavoritos, R.id.inicioAjustes)) findViewById<View>(id).onFocusChangeListener = aoFocar
+                R.id.inicioFavoritos)) findViewById<View>(id).onFocusChangeListener = aoFocar
         atualizarPainel()
         handler.post(tiquePainel)
     }
@@ -374,6 +373,16 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         d.setTint(cor)
         if (emCima) texto.setCompoundDrawablesRelative(null, d, null, null)
         else texto.setCompoundDrawablesRelative(d, null, null, null)
+    }
+
+    /** Cartão em linha: o ícone à esquerda do nome e a seta à direita. */
+    private fun iconeLinha(texto: TextView, desenho: Int) {
+        val px = (24 * resources.displayMetrics.density).toInt()
+        fun tingido(id: Int) = ContextCompat.getDrawable(this, id)?.mutate()?.apply {
+            setBounds(0, 0, px, px)
+            setTint(0xFFFFFFFF.toInt())
+        }
+        texto.setCompoundDrawablesRelative(tingido(desenho), null, tingido(R.drawable.ic_inicio_seta), null)
     }
 
     override fun onDestroy() {
