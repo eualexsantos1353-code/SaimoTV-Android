@@ -75,6 +75,8 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_escolha)
+        // O Início tem fundo escuro neutro (as outras telas seguem com o fundo do app).
+        window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(0xFF121116.toInt()))
         status = findViewById(R.id.escolhaStatus)
         filas = findViewById(R.id.inicioFilas)
         fundo = findViewById(R.id.inicioFundo)
@@ -299,7 +301,7 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         )
         for ((id, desenho, abrir) in blocos) {
             val bloco = findViewById<TextView>(id)
-            icone(bloco, desenho, 24, 0xFFFFFFFF.toInt())
+            icone(bloco, desenho, 28, 0xFFFFFFFF.toInt(), emCima = true)
             bloco.setOnClickListener { abrir() }
         }
         val aoFocar = View.OnFocusChangeListener { _, foco -> if (foco) cabecalhoPadrao() }
@@ -345,13 +347,14 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         }
     }
 
-    /** Ícone à esquerda do texto, no tamanho e na cor pedidos. */
-    private fun icone(texto: TextView, desenho: Int, dp: Int, cor: Int) {
+    /** Ícone à esquerda do texto (ou em cima dele), no tamanho e na cor pedidos. */
+    private fun icone(texto: TextView, desenho: Int, dp: Int, cor: Int, emCima: Boolean = false) {
         val d = ContextCompat.getDrawable(this, desenho)?.mutate() ?: return
         val px = (dp * resources.displayMetrics.density).toInt()
         d.setBounds(0, 0, px, px)
         d.setTint(cor)
-        texto.setCompoundDrawablesRelative(d, null, null, null)
+        if (emCima) texto.setCompoundDrawablesRelative(null, d, null, null)
+        else texto.setCompoundDrawablesRelative(d, null, null, null)
     }
 
     override fun onDestroy() {
