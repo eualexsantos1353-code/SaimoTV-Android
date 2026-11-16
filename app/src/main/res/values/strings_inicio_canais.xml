@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="e1_canais">Canais</string>
+    <string name="e1_canais_abertos">Abertos</string>
+    <string name="e1_canais_ultimos">Últimos</string>
+    <string name="e1_canais_favoritos">Favoritos</string>
+    <string name="e1_ver_todos">Ver todos ›</string>
+    <string name="e1_ao_vivo">AO VIVO</string>
+</resources>

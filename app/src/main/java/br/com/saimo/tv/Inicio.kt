@@ -101,6 +101,12 @@ object Inicio {
         /// capa de quem não traz a própria sai delas na hora de desenhar, e a
         /// fileira montada antes delas tem de ser redesenhada quando chegam.
         val comFichas: Boolean = Generos.prontos,
+        /// Fileira com abas (os canais): os nomes, a aba escolhida e quem devolve os cartões de cada uma.
+        val modos: List<String>? = null,
+        val modoAtual: Int = 0,
+        val aoModo: ((Int) -> List<Cartao>)? = null,
+        /// "Ver todos" no canto da fileira, quando ela tem para onde levar.
+        val aoVerTodos: (() -> Unit)? = null,
     )
 
     class Adapter(
@@ -135,6 +141,7 @@ object Inicio {
             for (i in 0 until comum) {
                 val a = velhas[i]; val b = novas[i]
                 val igual = a.titulo == b.titulo && a.tipo == b.tipo && a.comFichas == b.comFichas &&
+                    a.modoAtual == b.modoAtual &&
                     a.cartoes.size == b.cartoes.size &&
                     a.cartoes.indices.all { a.cartoes[it].titulo == b.cartoes[it].titulo &&
                         a.cartoes[it].subtitulo == b.cartoes[it].subtitulo &&
@@ -149,6 +156,10 @@ object Inicio {
         inner class Holder(view: View) : RecyclerView.ViewHolder(view) {
             val titulo: TextView = view.findViewById(R.id.filaTitulo)
             val capas: RecyclerView = view.findViewById(R.id.filaCapas)
+            val modos: View = view.findViewById(R.id.filaModos)
+            val abas: List<TextView> = listOf(R.id.filaModo0, R.id.filaModo1, R.id.filaModo2)
+                .map { view.findViewById<TextView>(it) }
+            val verTodos: TextView = view.findViewById(R.id.filaVerTodos)
         }
 
         override fun getItemViewType(position: Int) = filas[position].tipo.ordinal
@@ -173,7 +184,7 @@ object Inicio {
         override fun onBindViewHolder(holder: Holder, position: Int) {
             val fila = filas[position]
             holder.titulo.text = fila.titulo
-            holder.capas.adapter = Capas(fila.cartoes, fila.tipo, escopo, capaDe, aoFocar, aoSairPelaEsquerda)
+            desenhar(holder, fila)
             holder.capas.scrollToPosition(posicoes[fila.titulo] ?: 0)
             holder.capas.clearOnScrollListeners()
             holder.capas.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -182,6 +193,47 @@ object Inicio {
                     posicoes[fila.titulo] = gerente.findFirstVisibleItemPosition()
                 }
             })
+        }
+
+        /** As capas, as abas e o "Ver todos" de uma fileira. */
+        private fun desenhar(holder: Holder, fila: Fila) {
+            holder.capas.adapter = Capas(fila.cartoes, fila.tipo, escopo, capaDe, aoFocar, aoSairPelaEsquerda)
+            val nomes = fila.modos
+            holder.modos.visibility = if (nomes == null) View.GONE else View.VISIBLE
+            holder.abas.forEachIndexed { i, aba ->
+                val nome = nomes?.getOrNull(i)
+                aba.visibility = if (nome == null) View.GONE else View.VISIBLE
+                aba.text = nome.orEmpty()
+                aba.isSelected = i == fila.modoAtual
+                aba.setOnClickListener { trocarModo(holder, i) }
+                aba.setOnFocusChangeListener { _, foco -> if (foco) subirFileira(holder.itemView) }
+            }
+            holder.verTodos.apply {
+                visibility = if (fila.aoVerTodos == null) View.GONE else View.VISIBLE
+                setOnClickListener { fila.aoVerTodos?.invoke() }
+                setOnFocusChangeListener { _, foco -> if (foco) subirFileira(holder.itemView) }
+            }
+        }
+
+        /** Troca a aba no lugar, sem refazer a fileira: o foco fica na aba que a pessoa apertou. */
+        private fun trocarModo(holder: Holder, modo: Int) {
+            val posicao = holder.bindingAdapterPosition
+            if (posicao == RecyclerView.NO_POSITION) return
+            val fila = filas[posicao]
+            val novos = fila.aoModo?.invoke(modo) ?: return
+            val nova = fila.copy(cartoes = novos, modoAtual = modo)
+            filas = filas.toMutableList().also { it[posicao] = nova }
+            posicoes[nova.titulo] = 0
+            desenhar(holder, nova)
+            holder.capas.scrollToPosition(0)
+        }
+
+        /** A fileira inteira à vista quando o foco chega a ela pelo cabeçalho (como já faz pelas capas). */
+        private fun subirFileira(fileira: View) {
+            if (fileira === ultimaFileira.get()) return
+            ultimaFileira = java.lang.ref.WeakReference(fileira)
+            val lista = fileira.parent as? RecyclerView ?: return
+            lista.post { lista.smoothScrollBy(0, fileira.top - lista.paddingTop) }
         }
 
         override fun getItemCount() = filas.size
@@ -275,6 +327,12 @@ object Inicio {
                 setOnClickListener { cartao.aoRemover?.invoke() }
             }
 
+            if (tipo == Tipo.LARGO) {
+                holder.selo?.apply {
+                    text = cartao.selo.orEmpty()
+                    visibility = if (cartao.selo.isNullOrEmpty()) View.GONE else View.VISIBLE
+                }
+            }
             if (tipo == Tipo.SECAO) { secao(holder, cartao); return }
             if (tipo == Tipo.EVENTO) { evento(holder, cartao); return }
 

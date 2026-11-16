@@ -508,29 +508,51 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
     }
 
     /** Os canais favoritos — ou os abertos — com o que passa agora. */
+    /**
+     * A fileira Canais, com três abas: Abertos (TV aberta), Últimos (os que a pessoa viu por último) e
+     * Favoritos. A aba escolhida fica salva e volta na próxima vez que o Início abre.
+     */
     private fun aoVivo(): Inicio.Fila? {
         val todos = MinhasListas.somar(Remote.channels, false)
         if (todos.isEmpty()) return null
-        val ultimo = todos.firstOrNull { it.name == Preferencias.ultimoCanal }
-        val favoritos = todos.filter { Favorites.contains(it.name) }
-        val escolhidos = (listOfNotNull(ultimo) + favoritos.ifEmpty {
-            // Sem favoritos: a TV aberta; e, se a lista não tem (as listas da
-            // própria pessoa), os primeiros canais dela.
-            todos.filter { Categorias.de(it) == "TV Aberta" }.ifEmpty { todos }
-        }).distinct().take(16)
-        val agora = System.currentTimeMillis()
-        return Inicio.Fila(getString(R.string.inicio_ao_vivo_agora), escolhidos.map { canal ->
-            val programa = Epg.nowNext(canal.name, agora)?.first
-            Inicio.Cartao(
-                titulo = canal.name,
-                capa = canal.logo.orEmpty(),
-                inicial = canal.name.take(1).uppercase(),
-                progresso = programa?.progress(agora),
-                subtitulo = programa?.title,
-            ) {
-                startActivity(Intent(this, MainActivity::class.java).putExtra(MainActivity.EXTRA_CANAL, canal.name))
+        CanaisRecentes.registrar(this, Preferencias.ultimoCanal)
+        val guardado = getSharedPreferences("inicio", MODE_PRIVATE)
+        val modo = guardado.getInt("modo_canais", 0).coerceIn(0, 2)
+
+        fun cartoes(aba: Int): List<Inicio.Cartao> {
+            val escolhidos = when (aba) {
+                1 -> CanaisRecentes.lista(this).mapNotNull { nome -> todos.firstOrNull { it.name == nome } }
+                2 -> todos.filter { Favorites.contains(it.name) }
+                // TV aberta; e, se a lista não tem (as listas da própria pessoa), os primeiros canais dela.
+                else -> todos.filter { Categorias.de(it) == "TV Aberta" }.ifEmpty { todos }
+            }.distinct().take(20)
+            return escolhidos.map { canal ->
+                Inicio.Cartao(
+                    titulo = canal.name,
+                    capa = canal.logo.orEmpty(),
+                    inicial = canal.name.take(1).uppercase(),
+                    selo = getString(R.string.e1_ao_vivo),
+                    seloAoVivo = true,
+                ) {
+                    startActivity(Intent(this, MainActivity::class.java).putExtra(MainActivity.EXTRA_CANAL, canal.name))
+                }
             }
-        }, Inicio.Tipo.LARGO)
+        }
+
+        return Inicio.Fila(
+            getString(R.string.e1_canais), cartoes(modo), Inicio.Tipo.LARGO,
+            modos = listOf(
+                getString(R.string.e1_canais_abertos),
+                getString(R.string.e1_canais_ultimos),
+                getString(R.string.e1_canais_favoritos),
+            ),
+            modoAtual = modo,
+            aoModo = { escolhido ->
+                guardado.edit().putInt("modo_canais", escolhido).apply()
+                cartoes(escolhido)
+            },
+            aoVerTodos = { abrirAoVivo() },
+        )
     }
 
     private fun favoritos(): Inicio.Fila? {
