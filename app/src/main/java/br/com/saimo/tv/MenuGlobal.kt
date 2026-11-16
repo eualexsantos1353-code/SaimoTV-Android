@@ -185,6 +185,8 @@ abstract class TelaComMenu : AppCompatActivity() {
     protected open val aba: Aba = Aba.NENHUMA
     protected open fun aoFocarMenu() {}
     protected open val aoMenuInicio: (() -> Unit)? = null
+    /** Sem a barra de abas no topo (o Início, que tem o painel no lugar dela). */
+    protected open val semMenu: Boolean = false
     protected var barraMenu: View? = null
         private set
     private var vazioView: View? = null
@@ -262,9 +264,9 @@ abstract class TelaComMenu : AppCompatActivity() {
         // Recorta cada parte no próprio espaço: a imagem larga da ficha, sem
         // isso, desenhava por cima do menu.
         val raiz = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        val barra = MenuGlobal.criar(this, aba, { aoFocarMenu() }, aoMenuInicio)
+        val barra = if (semMenu) null else MenuGlobal.criar(this, aba, { aoFocarMenu() }, aoMenuInicio)
         barraMenu = barra
-        raiz.addView(barra)
+        if (barra != null) raiz.addView(barra)
         // O conteúdo e, por cima, o estado vazio (escondido até alguém pedir).
         val moldura = android.widget.FrameLayout(this)
         val conteudo = layoutInflater.inflate(layoutResID, moldura, false)
@@ -291,7 +293,7 @@ abstract class TelaComMenu : AppCompatActivity() {
         // a aba "Início". Enquanto o conteúdo não pega o foco, o menu fica de
         // fora; depois (ou em dois segundos, se o conteúdo não tiver nada), a
         // seta para cima chega nele normalmente.
-        val abas = barra.findViewById<ViewGroup>(R.id.menuGlobalAbas)
+        val abas = barra?.findViewById<ViewGroup>(R.id.menuGlobalAbas) ?: return
         abas.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
         val liberar = Runnable { abas.descendantFocusability = ViewGroup.FOCUS_AFTER_DESCENDANTS }
         raiz.viewTreeObserver.addOnGlobalFocusChangeListener { _, novo ->

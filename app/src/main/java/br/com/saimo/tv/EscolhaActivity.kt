@@ -41,6 +41,7 @@ import java.util.Locale
 class EscolhaActivity : TelaComMenu(), Connect.Listener {
 
     override val aba = Aba.INICIO
+    override val semMenu = true
     override fun aoFocarMenu() = cabecalhoPadrao()
     override val aoMenuInicio: (() -> Unit) = { focarPrimeiro() }
 
@@ -208,8 +209,8 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         when (keyCode) {
             KeyEvent.KEYCODE_DPAD_UP -> {
                 val focado = currentFocus
-                if (focado == null || MenuGlobal.temFoco(barraMenu)) {
-                    MenuGlobal.focar(barraMenu, Aba.INICIO)
+                if (focado == null) {
+                    focarPainel()
                     return true
                 }
                 val proximo = focado.focusSearch(View.FOCUS_UP)
@@ -217,12 +218,11 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
                     proximo.requestFocus(View.FOCUS_UP)
                     return true
                 }
-                MenuGlobal.focar(barraMenu, Aba.INICIO)
                 return true
             }
             KeyEvent.KEYCODE_DPAD_DOWN -> {
                 val focado = currentFocus
-                if (focado == null || MenuGlobal.temFoco(barraMenu)) {
+                if (focado == null) {
                     focarPrimeiro()
                     return true
                 }
@@ -382,7 +382,13 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         // quadro, em vez de largar o foco no menu.
         if (tentativas > 0) filas.postDelayed(Runnable { focarPrimeiro(tentativas - 1) }, 60)
         else if (vazioVisivel()) focarBotaoDoVazio()
-        else MenuGlobal.focar(barraMenu, Aba.INICIO)
+        else focarPainel()
+    }
+
+    /** O começo da tela (sem a barra de abas): o bloco grande, com as fileiras roladas para o topo. */
+    private fun focarPainel() {
+        filas.scrollToPosition(0)
+        if (::blocoContinuar.isInitialized) blocoContinuar.requestFocus()
     }
 
     // MARK: - Fileiras
@@ -550,11 +556,10 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
             KeyEvent.KEYCODE_CHANNEL_DOWN, KeyEvent.KEYCODE_TV -> { abrirAoVivo(); return true }
             KeyEvent.KEYCODE_SEARCH -> { BuscaActivity.abrir(this); return true }
             KeyEvent.KEYCODE_BACK, KeyEvent.KEYCODE_ESCAPE -> {
-                // Primeiro VOLTAR sobe para o menu; o segundo, de lá, pede
+                // Primeiro VOLTAR sobe para o bloco grande; o segundo, de lá, pede
                 // confirmação — sair do app sem querer é o erro mais comum.
-                if (!MenuGlobal.temFoco(barraMenu)) {
-                    filas.scrollToPosition(0)
-                    MenuGlobal.focar(barraMenu, Aba.INICIO)
+                if (!blocoContinuar.hasFocus()) {
+                    focarPainel()
                     return true
                 }
                 val agora = System.currentTimeMillis()
