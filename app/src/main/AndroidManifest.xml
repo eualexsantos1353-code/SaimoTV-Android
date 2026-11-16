@@ -107,6 +107,12 @@
             android:name=".BuscaDoSistema"
             android:authorities="br.com.saimo.tv.busca"
             android:exported="true" />
+        <!-- O Free My TV pergunta se o canal de um jogo existe na lista (só o nome, nunca o
+             endereço): ConsultaDeCanal. Responde só a ele e ao adb. -->
+        <provider
+            android:name=".ConsultaDeCanal"
+            android:authorities="br.com.saimo.tv.canais"
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
