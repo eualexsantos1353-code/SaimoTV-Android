@@ -25,6 +25,7 @@ class AgendaEventos(
         val nome: TextView = view.findViewById(R.id.agendaNome)
         val detalhe: TextView = view.findViewById(R.id.agendaDetalhe)
         val meta: TextView = view.findViewById(R.id.agendaMeta)
+        val contagem: TextView = view.findViewById(R.id.agendaContagem)
     }
 
     override fun onCreateViewHolder(pai: ViewGroup, tipo: Int) =
@@ -52,6 +53,14 @@ class AgendaEventos(
         val meta = listOf(hora, item.emissora).filter { it.isNotEmpty() }.joinToString(" · ")
         holder.meta.text = meta
         holder.meta.visibility = if (meta.isEmpty()) View.GONE else View.VISIBLE
+        val dias = AgendaDados.diasEntre(System.currentTimeMillis(), item.em)
+        holder.contagem.text = when {
+            dias == 0 -> c.getString(R.string.agenda_hoje)
+            dias == 1 -> c.getString(R.string.agenda_amanha)
+            dias == -1 -> c.getString(R.string.agenda_ontem)
+            dias > 1 -> c.getString(R.string.agenda_em_dias, dias)
+            else -> c.getString(R.string.agenda_ha_dias, -dias)
+        }
         holder.itemView.setOnClickListener { aoAbrir(item) }
         holder.itemView.setOnKeyListener { _, codigo, evento ->
             if (evento.action != KeyEvent.ACTION_DOWN) return@setOnKeyListener false

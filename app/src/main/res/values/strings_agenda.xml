@@ -18,4 +18,9 @@
     <string name="agenda_filme_cinema">Estreia nos cinemas</string>
     <string name="agenda_filme_digital">Lançamento digital</string>
     <string name="agenda_filme_limitada">Estreia limitada</string>
+    <string name="agenda_hoje">Hoje</string>
+    <string name="agenda_amanha">Amanhã</string>
+    <string name="agenda_ontem">Ontem</string>
+    <string name="agenda_em_dias">Em %1$d dias</string>
+    <string name="agenda_ha_dias">Há %1$d dias</string>
 </resources>
