@@ -48,7 +48,8 @@ class NotificacoesLista(
         // O foco fica preso ao painel: para os lados fica onde está; em cima do primeiro, também; embaixo do último, vai a "Fechar".
         h.acao.nextFocusLeftId = h.acao.id
         h.acao.nextFocusRightId = h.acao.id
-        if (posicao == 0) h.acao.nextFocusUpId = h.acao.id
+        // As linhas são reaproveitadas: a regra do primeiro tem de ser desfeita nas outras, senão o foco trava ao subir.
+        h.acao.nextFocusUpId = if (posicao == 0) h.acao.id else View.NO_ID
         h.acao.nextFocusDownId = if (posicao == avisos.size - 1) idDoFechar else View.NO_ID
         // A cor do texto é trocada aqui (e não só pelo seletor de cores): branco sobre violeta, escuro sobre o branco do foco.
         h.acao.setTextColor(0xFFFFFFFF.toInt())
