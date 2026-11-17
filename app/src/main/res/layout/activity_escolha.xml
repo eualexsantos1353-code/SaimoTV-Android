@@ -180,7 +180,7 @@
                     android:layout_marginTop="2dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="#FFC4B5FD"
+                    android:textColor="?attr/astralAccent"
                     android:textSize="14sp" />
                 <TextView
                     android:id="@+id/bannerSinopse"
@@ -324,7 +324,7 @@
                 android:layout_height="26dp"
                 android:contentDescription="@null"
                 android:src="@drawable/ic_sino"
-                android:tint="#FF8B5CF6" />
+                android:tint="?attr/astralAccent" />
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

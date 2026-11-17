@@ -36,7 +36,7 @@
             android:layout_gravity="bottom"
             android:max="1000"
             android:progressBackgroundTint="#66FFFFFF"
-            android:progressTint="#FFB993FF"
+            android:progressTint="?attr/astralAccent"
             android:visibility="gone" />
     </FrameLayout>
     <TextView

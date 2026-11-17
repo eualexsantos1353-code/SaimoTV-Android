@@ -6,14 +6,14 @@
     <layer-list>
         <item>
             <shape android:shape="rectangle">
-                <solid android:color="#FF3B5BDB" />
+                <solid android:color="?attr/astralAccentForte" />
                 <stroke android:width="2dp" android:color="#FFFFFFFF" />
                 <corners android:radius="14dp" />
             </shape>
         </item>
         <item android:gravity="start|center_vertical">
             <shape android:shape="rectangle">
-                <solid android:color="#FFA5B4FC" />
+                <solid android:color="?attr/astralAccent" />
                 <size android:width="4dp" android:height="26dp" />
                 <corners android:radius="2dp" />
             </shape>
@@ -24,7 +24,7 @@
     <layer-list>
         <item>
             <shape android:shape="rectangle">
-                <solid android:color="#FF3B5BDB" />
+                <solid android:color="?attr/astralAccentForte" />
                 <stroke android:width="2dp" android:color="#FFFFFFFF" />
                 <corners android:radius="14dp" />
             </shape>
@@ -35,7 +35,7 @@
         <layer-list>
         <item android:gravity="start|center_vertical">
             <shape android:shape="rectangle">
-                <solid android:color="#FFA5B4FC" />
+                <solid android:color="?attr/astralAccent" />
                 <size android:width="4dp" android:height="26dp" />
                 <corners android:radius="2dp" />
             </shape>
