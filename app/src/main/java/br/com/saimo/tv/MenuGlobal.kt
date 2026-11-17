@@ -157,7 +157,7 @@ object MenuGlobal {
             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         val destino: Intent? = when (aba) {
             Aba.INICIO, Aba.NENHUMA -> null
-            Aba.AO_VIVO -> Intent(tela, MainActivity::class.java)
+            Aba.AO_VIVO -> Intent(tela, AoVivoActivity::class.java)
             Aba.EVENTOS -> Intent(tela, EventosActivity::class.java)
             Aba.ON_DEMAND -> Intent(tela, OnDemandActivity::class.java)
             Aba.FAVORITOS -> GradeActivity.intent(tela, GradeActivity.FAVORITOS)
