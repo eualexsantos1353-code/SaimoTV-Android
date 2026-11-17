@@ -30,6 +30,10 @@ android {
         targetSdk = 37
         versionCode = 30005
         versionName = "3.0.5"
+        // Client ID do Trakt: vem do segredo TRAKT_CLIENT_ID do GitHub Actions, nunca do Git.
+        // Sem ele o app compila igual e a conexão com o Trakt fica indisponível.
+        val traktId = (System.getenv("TRAKT_CLIENT_ID") ?: "").filter { it.isLetterOrDigit() }
+        buildConfigField("String", "TRAKT_CLIENT_ID", "\"$traktId\"")
     }
 
     signingConfigs {

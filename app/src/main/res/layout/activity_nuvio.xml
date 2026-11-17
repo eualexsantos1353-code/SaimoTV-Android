@@ -70,6 +70,46 @@
             android:textSize="14sp"
             android:visibility="gone" />
 
+        <!-- Trakt: a conexão só pede a pessoa quando falta, e explica para que serve. -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/nuvioTraktTexto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/astralTextoSecundario"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/nuvioTraktCodigo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.2"
+                android:textColor="?attr/astralTexto"
+                android:textSize="34sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/nuvioTraktBotao"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_ao_vivo_categoria"
+                android:focusable="true"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:textColor="@color/texto_botao_ficha"
+                android:textSize="16sp" />
+        </LinearLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

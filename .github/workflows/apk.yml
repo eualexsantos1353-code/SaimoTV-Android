@@ -40,6 +40,8 @@ jobs:
           fi
 
       - name: Compilar
+        env:
+          TRAKT_CLIENT_ID: ${{ secrets.TRAKT_CLIENT_ID }}
         run: |
           chmod +x gradlew
           ./gradlew --no-daemon assembleRelease

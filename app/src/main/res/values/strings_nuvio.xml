@@ -9,4 +9,12 @@
     <string name="nuvio_vazio">Nenhum título para mostrar.</string>
     <string name="nuvio_sem_app">O Nuvio não está instalado nesta TV.</string>
     <string name="nuvio_falha">Não foi possível abrir o Nuvio.</string>
+    <string name="nuvio_trakt_explica">Conecte sua conta Trakt para ver aqui o que você está assistindo e a sua lista.</string>
+    <string name="nuvio_trakt_conectar">Conectar Trakt</string>
+    <string name="nuvio_trakt_cancelar">Cancelar</string>
+    <string name="nuvio_trakt_tentar">Tentar de novo</string>
+    <string name="nuvio_trakt_aguardando">No celular, abra %1$s e digite este código:</string>
+    <string name="nuvio_trakt_conectado">Trakt conectado: %1$s</string>
+    <string name="nuvio_trakt_conectado_sem">Trakt conectado.</string>
+    <string name="nuvio_trakt_indisponivel">O Trakt não está configurado nesta versão do app.</string>
 </resources>

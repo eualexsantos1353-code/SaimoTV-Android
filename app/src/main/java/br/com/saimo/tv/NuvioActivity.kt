@@ -37,6 +37,61 @@ class NuvioActivity : TelaComMenu() {
             aviso.text = texto.orEmpty()
             aviso.visibility = if (texto == null) View.GONE else View.VISIBLE
         }
+
+        val traktBotao = findViewById<TextView>(R.id.nuvioTraktBotao)
+        traktBotao.nextFocusLeftId = menu.primeiroId
+        traktBotao.setOnClickListener {
+            if (Trakt.conectando) Trakt.cancelar()
+            else Trakt.entrar(applicationContext) { runOnUiThread { if (!isDestroyed) atualizarTrakt() } }
+            atualizarTrakt()
+        }
+        atualizarTrakt()
         focarQuandoPronto { abrir }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        atualizarTrakt()
+    }
+
+    override fun onDestroy() {
+        // Sair da página desiste de uma conexão pela metade; o login já feito fica.
+        Trakt.cancelar()
+        super.onDestroy()
+    }
+
+    /** O bloco do Trakt: indisponível, conectado, esperando o código ou pedindo a conexão. */
+    private fun atualizarTrakt() {
+        val texto = findViewById<TextView>(R.id.nuvioTraktTexto)
+        val codigo = findViewById<TextView>(R.id.nuvioTraktCodigo)
+        val botao = findViewById<TextView>(R.id.nuvioTraktBotao)
+        codigo.visibility = View.GONE
+        botao.visibility = View.VISIBLE
+        when {
+            !Trakt.disponivel() -> {
+                texto.text = getString(R.string.nuvio_trakt_indisponivel)
+                botao.visibility = View.GONE
+            }
+            Trakt.conectado(this) -> {
+                val nome = Trakt.usuario(this)
+                texto.text = if (nome.isEmpty()) getString(R.string.nuvio_trakt_conectado_sem)
+                    else getString(R.string.nuvio_trakt_conectado, nome)
+                botao.visibility = View.GONE
+            }
+            Trakt.conectando -> {
+                val c = Trakt.codigo
+                texto.text = getString(R.string.nuvio_trakt_aguardando, Trakt.endereco)
+                codigo.text = c.orEmpty()
+                codigo.visibility = if (c == null) View.GONE else View.VISIBLE
+                botao.text = getString(R.string.nuvio_trakt_cancelar)
+            }
+            else -> {
+                val m = Trakt.mensagem
+                texto.text = if (m.isEmpty()) getString(R.string.nuvio_trakt_explica) else m
+                botao.text = getString(if (m.isEmpty()) R.string.nuvio_trakt_conectar else R.string.nuvio_trakt_tentar)
+            }
+        }
+        // O botão sumiu com o foco nele: o foco volta para "Abrir Nuvio".
+        if (botao.visibility != View.VISIBLE && botao.hasFocus()) findViewById<View>(R.id.nuvioAbrir).requestFocus()
     }
 }
