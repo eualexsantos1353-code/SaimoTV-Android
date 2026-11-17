@@ -42,6 +42,7 @@ jobs:
       - name: Compilar
         env:
           TRAKT_CLIENT_ID: ${{ secrets.TRAKT_CLIENT_ID }}
+          TMDB_KEY: ${{ secrets.TMDB_KEY }}
         run: |
           chmod +x gradlew
           ./gradlew --no-daemon assembleRelease
