@@ -26,9 +26,8 @@ object MenuPrincipal {
                 if (atual == Destino.INICIO) noInicio() else tela.finish()
             },
             MenuLateral.Item(R.string.menu_ao_vivo, R.drawable.ic_live_tv) { ir(AoVivoActivity::class.java) },
-            MenuLateral.Item(R.string.menu_nuvio, R.drawable.ic_nuvio, atual = atual == Destino.NUVIO) {
-                if (atual != Destino.NUVIO) ir(NuvioActivity::class.java)
-            },
+            // Cinema: a tela do On Demand (catálogo de filmes e séries dos add-ons), tal como já existe.
+            MenuLateral.Item(R.string.astral_menu_cinema, R.drawable.ic_movie) { ir(OnDemandActivity::class.java) },
             MenuLateral.Item(R.string.agenda_menu, R.drawable.ic_agenda_cal, atual = atual == Destino.AGENDA) {
                 if (atual != Destino.AGENDA) ir(AgendaActivity::class.java)
             },
