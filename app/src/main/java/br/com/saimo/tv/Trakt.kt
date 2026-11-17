@@ -152,6 +152,14 @@ object Trakt {
         return r.second
     }
 
+    /** GET sem login (calendários públicos); só o Client ID. Fora da linha da tela. */
+    fun publico(caminho: String): String {
+        if (!disponivel()) throw IOException("sem Client ID")
+        val r = enviar("GET", caminho, null, null)
+        if (r.first != 200) throw IOException("HTTP ${r.first}")
+        return r.second
+    }
+
     // MARK: - HTTP
 
     private fun base64Url(bytes: ByteArray) =
