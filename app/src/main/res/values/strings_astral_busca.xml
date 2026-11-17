@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="astral_busca_dica">Buscar canais</string>
+    <string name="astral_busca_ajuda">Digite o nome do canal. Com microfone ou teclado conectado, também dá para falar ou digitar.</string>
+    <string name="astral_busca_comece">Digite o nome de um canal.</string>
+    <string name="astral_busca_nada">Nenhum canal encontrado para \"%1$s\".</string>
+</resources>

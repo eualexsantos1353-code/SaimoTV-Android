@@ -21,11 +21,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * A busca, uma só para tudo: canais, filmes, séries, animes, doramas e atores.
- *
- * Antes: digitar tudo, apertar "Buscar", esperar uma lista de nomes — e anime
- * e dorama nem entravam. Agora os resultados mudam a cada letra, em fileiras de
- * capa, com o microfone para quem tem e o teclado físico para quem tem.
+ * A busca de canais: os resultados mudam a cada letra, com o microfone para quem tem e o teclado físico
+ * para quem tem. Filmes, séries e atores saíram daqui: o ASTRAL só busca canais.
  */
 @UnstableApi
 class BuscaActivity : TelaComMenu(), Connect.Listener {
@@ -60,6 +57,8 @@ class BuscaActivity : TelaComMenu(), Connect.Listener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_busca)
         campo = findViewById(R.id.buscaTermo)
+        campo.hint = getString(R.string.astral_busca_dica)
+        findViewById<TextView>(R.id.buscaAjuda)?.setText(R.string.astral_busca_ajuda)
         estado = findViewById(R.id.buscaEstado)
         resultados = findViewById(R.id.buscaResultados)
         resultados.layoutManager = Inicio.Filas(this)
@@ -87,8 +86,6 @@ class BuscaActivity : TelaComMenu(), Connect.Listener {
             }
         }
 
-        // Prepara o índice enquanto a pessoa ainda procura a primeira letra.
-        lifecycleScope.launch(semDerrubar) { Generos.carregar(this@BuscaActivity); Vod.entradas(this@BuscaActivity) }
         atualizar(imediato = true)
     }
 
@@ -192,7 +189,7 @@ class BuscaActivity : TelaComMenu(), Connect.Listener {
             voz.launch(Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
                 .putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
                 .putExtra(RecognizerIntent.EXTRA_LANGUAGE, "pt-BR")
-                .putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.busca_dica)))
+                .putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.astral_busca_dica)))
         }
     }
 
@@ -346,97 +343,16 @@ class BuscaActivity : TelaComMenu(), Connect.Listener {
             val filas = mutableListOf<Inicio.Fila>()
 
             val alvoNorm = Vod.normalizar(termo)
-            val canais = MinhasListas.somar(Unlock.channels(), Unlock.unlocked).filter { Vod.normalizar(it.name).contains(alvoNorm) }.take(20)
+            val canais = MinhasListas.somar(Unlock.channels(), Unlock.unlocked).filter { Vod.normalizar(it.name).contains(alvoNorm) }.take(40)
             if (canais.isNotEmpty()) filas += Inicio.Fila(getString(R.string.busca_canais), canais.map { c ->
                 Inicio.Cartao(c.name, c.logo.orEmpty(), c.name.take(1).uppercase()) {
+                    lembrar()
                     startActivity(Intent(this@BuscaActivity, MainActivity::class.java).putExtra(MainActivity.EXTRA_CANAL, c.name))
                 }
             }, Inicio.Tipo.LARGO)
 
-            val achados = if (termo.length >= 2) Vod.buscar(this@BuscaActivity, termo, 80) else emptyList()
-            val filmes = achados.filter { !it.serie }
-            val series = achados.filter { it.serie }
-            if (filmes.isNotEmpty()) filas += Inicio.Fila(getString(R.string.vod_filmes), filmes.map { cartao(it) })
-            if (series.isNotEmpty()) filas += Inicio.Fila(getString(R.string.vod_series), series.map { cartao(it) })
-
-            val colecoes = if (termo.length >= 2) Vod.buscarColecoes(this@BuscaActivity, termo).take(30) else emptyList()
-            if (colecoes.isNotEmpty()) filas += Inicio.Fila(getString(R.string.busca_colecoes), colecoes.map { (tipo, c) ->
-                val alvo = Alvo(c.titulo, true, "", c.ano, tipo, c.tmdbId.toIntOrNull() ?: 0)
-                Inicio.Cartao(c.nomeCompleto, "", c.titulo.take(1).uppercase(), procurarCapa = true,
-                    nomeDaCapa = c.titulo, alvo = alvo) { lembrar(); FichaActivity.abrir(this@BuscaActivity, alvo) }
-            })
-
             mostrar(filas, termo)
-            if (achados.isEmpty() && colecoes.isEmpty() && termo.length >= 3) Telemetria.buscouSemAchar("vod", termo)
-
-            // Lançamentos, catálogos de addons e TMDB: busca fora do catálogo local
-            if (termo.length >= 3) {
-                delay(300)
-                val addonsTitulos = AddonsService.buscarCatalogos(termo)
-                if (addonsTitulos.isNotEmpty() && digitado.toString().trim() == termo) {
-                    filas += Inicio.Fila("Nos Addons", addonsTitulos.map { item ->
-                        val alvo = item.paraAlvo()
-                        Inicio.Cartao(
-                            titulo = item.titulo,
-                            capa = item.capa.orEmpty(),
-                            inicial = item.titulo.take(1).uppercase(),
-                            subtitulo = item.ano.takeIf { it.isNotBlank() },
-                            alvo = alvo,
-                            aoEscolher = {
-                                lembrar()
-                                FichaActivity.abrir(this@BuscaActivity, alvo)
-                            }
-                        )
-                    })
-                    mostrar(filas, termo)
-                }
-
-                val tmdbTitulos = Detalhes.buscarTitulos(termo)
-                if (tmdbTitulos.isNotEmpty() && digitado.toString().trim() == termo) {
-                    val conhecidosIds = achados.mapNotNull { Generos.id(it.nomeCompleto, it.serie) ?: Generos.id(it.titulo, it.serie) }.toSet()
-                    val novos = tmdbTitulos.filter { it.tmdbId !in conhecidosIds }
-                    if (novos.isNotEmpty()) {
-                        filas += Inicio.Fila(getString(R.string.pagina_lancamentos), novos.map { t ->
-                            val alvo = Alvo(t.titulo, t.serie, "", t.ano, tmdbId = t.tmdbId)
-                            Inicio.Cartao(
-                                titulo = t.titulo,
-                                capa = t.capa.orEmpty(),
-                                inicial = t.titulo.take(1).uppercase(),
-                                subtitulo = t.ano.takeIf { it.isNotBlank() },
-                                alvo = alvo,
-                                aoEscolher = {
-                                    lembrar()
-                                    FichaActivity.abrir(this@BuscaActivity, alvo)
-                                }
-                            )
-                        })
-                        mostrar(filas, termo)
-                    }
-                }
-            }
-
-            // Atores vêm do TMDB: por último, e só com o termo parado.
-            if (termo.length >= 3) {
-                delay(200)
-                val pessoas = Detalhes.pessoas(termo)
-                if (pessoas.isNotEmpty() && digitado.toString().trim() == termo) {
-                    filas += Inicio.Fila(getString(R.string.busca_atores), pessoas.map { p ->
-                        Inicio.Cartao(p.nome, p.foto.orEmpty(), p.nome.take(1).uppercase()) {
-                            lembrar(); AtorActivity.abrir(this@BuscaActivity, p)
-                        }
-                    })
-                    mostrar(filas, termo)
-                }
-            }
-        }
-    }
-
-    private fun cartao(a: Vod.Achado): Inicio.Cartao {
-        val alvo = Alvo(a.titulo, a.serie, a.letra, a.ano)
-        return Inicio.Cartao(a.nomeCompleto, "", a.titulo.take(1).uppercase(), procurarCapa = a.serie,
-            nomeDaCapa = a.nomeCompleto, alvo = alvo,
-            progresso = if (a.serie) null else Progresso.fracao(this, Progresso.chaveFilme(a.titulo))) {
-            lembrar(); FichaActivity.abrir(this, alvo)
+            if (canais.isEmpty() && termo.length >= 3) Telemetria.buscouSemAchar("canal", termo)
         }
     }
 
@@ -446,7 +362,7 @@ class BuscaActivity : TelaComMenu(), Connect.Listener {
         adaptador.trocar(filas)
         estado.visibility = if (filas.isEmpty()) View.VISIBLE else View.GONE
         val pronto = Enderecos.temAlgum || AddonsStore.temAtivo()
-        estado.text = if (pronto) getString(R.string.busca_nada, termo) else getString(R.string.vazio_inicio)
+        estado.text = if (pronto) getString(R.string.astral_busca_nada, termo) else getString(R.string.vazio_inicio)
     }
 
     /** Sem nada digitado: as buscas recentes, a um OK. */
@@ -456,7 +372,7 @@ class BuscaActivity : TelaComMenu(), Connect.Listener {
             adaptador.trocar(emptyList())
             estado.visibility = View.VISIBLE
             val pronto = Enderecos.temAlgum || AddonsStore.temAtivo()
-            estado.text = getString(if (pronto) R.string.busca_comece else R.string.vazio_inicio)
+            estado.text = getString(if (pronto) R.string.astral_busca_comece else R.string.vazio_inicio)
             return
         }
         estado.visibility = View.GONE
