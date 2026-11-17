@@ -51,6 +51,9 @@ class AoVivoActivity : TelaComMenu() {
         private const val TICK_MS = 20_000L
         /** Parado num canal por este tempo antes de a prévia tocar: descer a lista rápido não abre conexões. */
         private const val ESPERA_MS = 500L
+        /** Falhas seguidas da prévia (queda, endereço vencido) antes de desistir; cada uma tenta a fonte seguinte. */
+        private const val TENTATIVAS_MAX = 3
+        private const val RECONECTAR_MS = 1_500L
     }
 
     private enum class Filtro(val rotulo: String) {
@@ -84,6 +87,13 @@ class AoVivoActivity : TelaComMenu() {
     private var imagemCarregada: String? = null
 
     private val iniciarVideo = Runnable { emFoco?.let { tocarPrevia(it) } }
+    private var canalPrevia: Channel? = null
+    private var tentativas = 0
+    private val reconectar = Runnable {
+        val p = player
+        val c = canalPrevia
+        if (p != null && c != null) prepararPrevia(p, c)
+    }
 
     private val tick = object : Runnable {
         override fun run() {
@@ -277,7 +287,7 @@ class AoVivoActivity : TelaComMenu() {
     }
 
     private fun tocarPrevia(canal: Channel) {
-        val fonte = canal.sources.firstOrNull() ?: return
+        if (canal.sources.isEmpty()) return
         pararVideo()
         val p = ExoPlayer.Builder(this)
             .setRenderersFactory(SaimoRenderersFactory(this))
@@ -298,6 +308,7 @@ class AoVivoActivity : TelaComMenu() {
         p.addListener(object : Player.Listener {
             override fun onRenderedFirstFrame() {
                 if (player !== p) return
+                tentativas = 0
                 previaVideo.alpha = 1f
                 previaEstado.visibility = View.GONE
                 atualizarLogoGrande()
@@ -313,7 +324,16 @@ class AoVivoActivity : TelaComMenu() {
 
             override fun onPlayerError(erro: PlaybackException) {
                 if (player !== p) return
-                // Sem nova tentativa: a prévia volta a ser só logo e programa.
+                // A transmissão cai ou o endereço vence depois de um tempo: tenta de novo, na fonte
+                // seguinte do canal. Só depois de TENTATIVAS_MAX falhas seguidas desiste.
+                if (tentativas < TENTATIVAS_MAX) {
+                    tentativas++
+                    previaEstado.text = "Reconectando…"
+                    previaEstado.visibility = View.VISIBLE
+                    handler.removeCallbacks(reconectar)
+                    handler.postDelayed(reconectar, RECONECTAR_MS)
+                    return
+                }
                 liberarPlayer()
                 previaEstado.text = "Prévia indisponível"
                 previaEstado.visibility = View.VISIBLE
@@ -324,6 +344,14 @@ class AoVivoActivity : TelaComMenu() {
         previaVideo.player = p
         previaVideo.useController = false
         previaVideo.setShutterBackgroundColor(android.graphics.Color.TRANSPARENT)
+        canalPrevia = canal
+        tentativas = 0
+        prepararPrevia(p, canal)
+    }
+
+    /** Põe o canal no player: a fonte da vez é a de número [tentativas], voltando ao começo se faltar. */
+    private fun prepararPrevia(p: ExoPlayer, canal: Channel) {
+        val fonte = canal.sources[tentativas % canal.sources.size]
         try {
             p.setMediaSource(Playback.mediaSource(this, fonte))
             p.prepare()
@@ -339,6 +367,8 @@ class AoVivoActivity : TelaComMenu() {
         val p = player ?: return
         player = null
         canalTocando = null
+        canalPrevia = null
+        handler.removeCallbacks(reconectar)
         previaVideo.player = null
         previaVideo.alpha = 0f
         atualizarLogoGrande()
