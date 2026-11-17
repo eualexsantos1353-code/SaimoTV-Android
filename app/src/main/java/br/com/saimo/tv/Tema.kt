@@ -124,6 +124,14 @@ object Tema {
         if (aplicada != assinatura()) activity.recreate()
     }
 
+    /** Recurso do wallpaper escolhido, para telas que pintam o fundo no código. */
+    fun wallpaper(f: Fundo = fundo): Int = when (f) {
+        Fundo.AMBAR -> R.drawable.wallpaper_ambar
+        Fundo.VERMELHO -> R.drawable.wallpaper_vermelho
+        Fundo.AZUL -> R.drawable.wallpaper_azul
+        Fundo.ROXO -> R.drawable.wallpaper_roxo
+    }
+
     private fun mudou() {
         SaimoApp.atividadeAtual?.let { verificar(it) }
     }

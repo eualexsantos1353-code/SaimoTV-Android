@@ -252,7 +252,7 @@ abstract class TelaComMenu : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setBackgroundDrawableResource(R.drawable.fundo_app)
+        window.setBackgroundDrawableResource(Tema.wallpaper())
     }
 
     override fun onResume() {
