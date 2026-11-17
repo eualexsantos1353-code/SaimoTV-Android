@@ -38,7 +38,7 @@ class NotificacoesLista(
         Cartoes.arredondar(h.moldura)
         h.inicial.text = a.titulo.take(1).uppercase()
         Cartoes.carregar(h.capa, h.inicial, a.poster?.let { "https://image.tmdb.org/t/p/w185$it" })
-        h.ponto.visibility = if (a.lida) View.INVISIBLE else View.VISIBLE
+        h.ponto.visibility = if (a.lida) View.GONE else View.VISIBLE
         h.tipo.text = c.getString(if (a.serie) R.string.ntf_tipo_episodio else R.string.ntf_tipo_filme)
         h.titulo.text = a.titulo
         h.detalhe.text = if (a.serie) c.getString(R.string.ntf_detalhe_episodio, a.temporada, a.numero)
@@ -50,10 +50,13 @@ class NotificacoesLista(
         h.acao.nextFocusRightId = h.acao.id
         if (posicao == 0) h.acao.nextFocusUpId = h.acao.id
         h.acao.nextFocusDownId = if (posicao == avisos.size - 1) idDoFechar else View.NO_ID
-        h.acao.setOnFocusChangeListener { _, foco ->
+        // A cor do texto é trocada aqui (e não só pelo seletor de cores): branco sobre violeta, escuro sobre o branco do foco.
+        h.acao.setTextColor(0xFFFFFFFF.toInt())
+        h.acao.setOnFocusChangeListener { v, foco ->
+            (v as TextView).setTextColor(if (foco) 0xFF111113.toInt() else 0xFFFFFFFF.toInt())
             if (foco && !a.lida) {
                 a.lida = true
-                h.ponto.visibility = View.INVISIBLE
+                h.ponto.visibility = View.GONE
                 aoVer(a)
             }
         }

@@ -33,6 +33,10 @@ class PainelNotificacoes(
         lista.layoutManager = LinearLayoutManager(tela)
         sino.setOnClickListener { abrir() }
         fechar.setOnClickListener { fechar() }
+        (fechar as TextView).setTextColor(0xFFFFFFFF.toInt())
+        fechar.setOnFocusChangeListener { v, foco ->
+            (v as TextView).setTextColor(if (foco) 0xFF111113.toInt() else 0xFFFFFFFF.toInt())
+        }
         fechar.nextFocusLeftId = fechar.id
         fechar.nextFocusRightId = fechar.id
         fechar.nextFocusDownId = fechar.id
