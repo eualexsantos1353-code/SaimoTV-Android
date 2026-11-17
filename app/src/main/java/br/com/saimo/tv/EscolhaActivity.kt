@@ -60,6 +60,8 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
     private lateinit var continuarPrograma: TextView
     private lateinit var continuarLogo: ImageView
     private lateinit var menuLateral: MenuLateral
+    private lateinit var notificacoes: PainelNotificacoes
+    private var tiques = 0
     private val dataDoPainel = SimpleDateFormat("EEE, d 'de' MMM", Locale("pt", "BR"))
     private val atualizacao by lazy { OfertaDeAtualizacao(this) { mostrarStatus(it) } }
     private var jaIniciou = false
@@ -180,6 +182,7 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         super.onResume()
         Connect.listener = this
         Connect.notificarMudancaDeEstado()
+        atualizarNotificacoes()
         val atual = AddonsStore.versao.value
         if (atual != addonsVersaoVista) {
             addonsVersaoVista = atual
@@ -305,8 +308,14 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
             iconeLinha(bloco, desenho)
             bloco.setOnClickListener { abrir() }
         }
+        // O sino da Central de Notificações: depois da busca, antes do relógio. Não há nada acima nem à direita dele.
+        val sino = findViewById<View>(R.id.inicioSino)
+        sino.nextFocusUpId = sino.id
+        sino.nextFocusRightId = sino.id
+        notificacoes = PainelNotificacoes(this, findViewById(R.id.ntfPainel), sino, findViewById(R.id.inicioSinoContador),
+            listOf(findViewById(R.id.inicioConteudo), findViewById(R.id.inicioMenu)))
         val aoFocar = View.OnFocusChangeListener { _, foco -> if (foco) cabecalhoPadrao() }
-        for (id in listOf(R.id.inicioBusca, R.id.inicioContinuar, R.id.inicioProgramacao, R.id.inicioEventos,
+        for (id in listOf(R.id.inicioBusca, R.id.inicioSino, R.id.inicioContinuar, R.id.inicioProgramacao, R.id.inicioEventos,
                 R.id.inicioFavoritos)) findViewById<View>(id).onFocusChangeListener = aoFocar
         atualizarPainel()
         handler.post(tiquePainel)
@@ -327,12 +336,15 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         override fun run() {
             atualizarPainel()
             atualizarJogos()
+            // A cada 10 minutos, olha de novo a Agenda atrás de lançamentos que chegaram com a TV ligada.
+            if (++tiques % 20 == 0) atualizarNotificacoes()
             handler.postDelayed(this, 30_000)
         }
     }
 
     private fun atualizarPainel() {
         if (!::painelHora.isInitialized) return
+        if (::notificacoes.isInitialized) notificacoes.atualizarContador()
         val agora = Date()
         painelHora.text = hora.format(agora)
         painelData.text = dataDoPainel.format(agora).replaceFirstChar { it.uppercase() }
@@ -626,7 +638,23 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         return super.dispatchKeyEvent(event)
     }
 
+    /** Cria os avisos novos da Agenda (a conta do Trakt) e atualiza o sino. */
+    private fun atualizarNotificacoes() {
+        lifecycleScope.launch(semDerrubar) {
+            val novos = Notificacoes.atualizar(applicationContext)
+            if (isDestroyed || !::notificacoes.isInitialized) return@launch
+            notificacoes.atualizarContador()
+            if (novos > 0) notificacoes.recarregar()
+        }
+    }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        // Com o painel de notificações aberto, VOLTAR só o fecha (e o foco volta ao sino).
+        if ((keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_ESCAPE) &&
+            ::notificacoes.isInitialized && notificacoes.aberto) {
+            notificacoes.fechar()
+            return true
+        }
         when (keyCode) {
             KeyEvent.KEYCODE_GUIDE, KeyEvent.KEYCODE_CHANNEL_UP,
             KeyEvent.KEYCODE_CHANNEL_DOWN, KeyEvent.KEYCODE_TV -> { abrirAoVivo(); return true }

@@ -32,6 +32,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/inicioConteudo"
         android:layout_marginStart="64dp"
         android:clipChildren="false"
         android:orientation="vertical">
@@ -74,6 +75,36 @@
                     android:text="@string/inicio_painel_buscar"
                     android:textColor="#B4B2A9"
                     android:textSize="15sp" />
+                <!-- O sino da Central de Notificações, com o número dos avisos não vistos. -->
+                <FrameLayout
+                    android:id="@+id/inicioSino"
+                    android:layout_width="48dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/ntf_sino_foco"
+                    android:contentDescription="@string/ntf_sino"
+                    android:focusable="true">
+                    <ImageView
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_sino" />
+                    <TextView
+                        android:id="@+id/inicioSinoContador"
+                        android:layout_width="wrap_content"
+                        android:layout_height="18dp"
+                        android:layout_gravity="top|end"
+                        android:background="@drawable/ntf_badge"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center"
+                        android:minWidth="18dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="11sp"
+                        android:visibility="gone" />
+                </FrameLayout>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -220,6 +251,91 @@
         android:orientation="vertical"
         android:paddingStart="8dp"
         android:paddingEnd="8dp" />
+
+    <!-- O painel da Central de Notificações: abre à direita, por cima do Início. -->
+    <LinearLayout
+        android:id="@+id/ntfPainel"
+        android:layout_width="400dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/ntf_painel"
+        android:elevation="12dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_sino"
+                android:tint="#FF8B5CF6" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/ntf_titulo"
+                android:textColor="?attr/astralTexto"
+                android:textSize="22sp" />
+            <TextView
+                android:id="@+id/ntfNovas"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:background="@drawable/ntf_pilula"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textColor="#FFFFFFFF"
+                android:textSize="14sp"
+                android:visibility="gone" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/ntfVazio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="?attr/astralTextoSecundario"
+            android:textSize="15sp"
+            android:visibility="gone" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ntfLista"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:focusable="false" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:text="@string/ntf_rodape"
+            android:textColor="?attr/astralTextoSutil"
+            android:textSize="13sp" />
+        <TextView
+            android:id="@+id/ntfFechar"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/agenda_pilula"
+            android:focusable="true"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:text="@string/ntf_fechar"
+            android:textColor="@color/agenda_texto_pilula"
+            android:textSize="16sp" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/escolhaStatus"
