@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ntf_agora">Agora</string>
+    <string name="ntf_min">Há %1$d min</string>
+    <string name="ntf_horas">Há %1$dh</string>
+    <string name="ntf_dias">Há %1$d dias</string>
+</resources>
