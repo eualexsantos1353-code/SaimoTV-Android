@@ -2,6 +2,7 @@
 <!-- TV ao Vivo (etapa 2): marca e busca no topo, categorias, lista de canais à esquerda,
      prévia à direita e destaques embaixo. Sem menu lateral, sem VIP expirado, sem Recarga. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -106,7 +107,9 @@
                 android:id="@+id/previaVideo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone" />
+                android:alpha="0"
+                app:surface_type="texture_view"
+                app:use_controller="false" />
 
             <ImageView
                 android:id="@+id/previaLogoGrande"

@@ -264,7 +264,7 @@ class AoVivoActivity : TelaComMenu() {
     /** O logo grande só aparece sem imagem do programa e sem vídeo por cima. */
     private fun atualizarLogoGrande() {
         previaLogoGrande.visibility =
-            if (imagemCarregada == null && previaVideo.visibility != View.VISIBLE) View.VISIBLE else View.GONE
+            if (imagemCarregada == null && previaVideo.alpha < 1f) View.VISIBLE else View.GONE
     }
 
     // MARK: - Mini player
@@ -295,14 +295,14 @@ class AoVivoActivity : TelaComMenu() {
         p.addListener(object : Player.Listener {
             override fun onRenderedFirstFrame() {
                 if (player !== p) return
-                previaVideo.visibility = View.VISIBLE
+                previaVideo.alpha = 1f
                 previaEstado.visibility = View.GONE
                 atualizarLogoGrande()
             }
 
             override fun onPlaybackStateChanged(estado: Int) {
                 if (player !== p) return
-                if (estado == Player.STATE_BUFFERING && previaVideo.visibility != View.VISIBLE) {
+                if (estado == Player.STATE_BUFFERING && previaVideo.alpha < 1f) {
                     previaEstado.text = "Carregando prévia…"
                     previaEstado.visibility = View.VISIBLE
                 }
@@ -337,7 +337,7 @@ class AoVivoActivity : TelaComMenu() {
         player = null
         canalTocando = null
         previaVideo.player = null
-        previaVideo.visibility = View.GONE
+        previaVideo.alpha = 0f
         atualizarLogoGrande()
         p.release()
     }
