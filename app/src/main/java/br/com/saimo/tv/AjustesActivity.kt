@@ -92,6 +92,9 @@ class AjustesActivity : TelaComMenu() {
     private var chaveFoco: String? = null
     private var primeiroFoco = true
 
+    /** Maior que zero enquanto a tela troca ou remonta páginas: o foco que cai sozinho no menu nesses momentos não muda de página. */
+    private var trocando = 0
+
     private lateinit var linhasMenu: Map<Cat, View>
     private lateinit var tituloPg: TextView
     private lateinit var descricaoPg: TextView
@@ -119,7 +122,7 @@ class AjustesActivity : TelaComMenu() {
         lista.adapter = adaptador
         adaptador.linhas = linhas()
 
-        aparencia = AparenciaPainel(this, findViewById(R.id.ajAparenciaConteudo), R.id.ajCatPers, ::escolherHora) { chaveFoco = it }
+        aparencia = AparenciaPainel(this, findViewById(R.id.ajAparenciaConteudo), R.id.ajCatPers, ::escolherHora, { trocando += if (it) 1 else -1 }) { chaveFoco = it }
 
         linhasMenu = mapOf(
             Cat.PERS to findViewById<View>(R.id.ajCatPers),
@@ -135,7 +138,7 @@ class AjustesActivity : TelaComMenu() {
             }
             // Andar pelo menu mostra a categoria; o primeiro foco, ao abrir a tela, deixa a tela de boas-vindas.
             v.setOnFocusChangeListener { _, tem ->
-                if (tem) {
+                if (tem && trocando == 0) {
                     val primeira = primeiroFoco
                     primeiroFoco = false
                     if (!primeira) mostrarPagina(c, "")
@@ -153,7 +156,9 @@ class AjustesActivity : TelaComMenu() {
             nextFocusLeftId = R.id.ajCatPers
             setOnClickListener {
                 mostrarPagina(Cat.PERS, "telainicial")
+                trocando++
                 linhasMenu[Cat.PERS]?.requestFocus()
+                trocando--
             }
         }
 
@@ -192,6 +197,11 @@ class AjustesActivity : TelaComMenu() {
 
     /** Mostra a categoria (e a subpágina) no painel da direita, sem tirar o foco de onde está. */
     private fun mostrarPagina(c: Cat, s: String) {
+        trocando++
+        try { aplicarPagina(c, s) } finally { trocando-- }
+    }
+
+    private fun aplicarPagina(c: Cat, s: String) {
         categoria = c
         subpagina = s
         for ((k, v) in linhasMenu) v.isSelected = k == c

@@ -27,6 +27,7 @@ class AparenciaPainel(
     private val conteudo: LinearLayout,
     private val idEsquerda: Int,
     private val escolherHora: (String, Int, (Int) -> Unit) -> Unit,
+    private val trava: (Boolean) -> Unit,
     private val aoMudar: (String) -> Unit,
 ) {
     private val d = ctx.resources.displayMetrics.density
@@ -40,11 +41,17 @@ class AparenciaPainel(
     }
 
     fun montar() {
-        conteudo.removeAllViews()
-        tema()
-        wallpapers()
-        vidro()
-        animacoes()
+        // Remover o item que tem o foco faz o foco cair em outro lugar; a tela precisa saber que isso é só a montagem.
+        trava(true)
+        try {
+            conteudo.removeAllViews()
+            tema()
+            wallpapers()
+            vidro()
+            animacoes()
+        } finally {
+            trava(false)
+        }
     }
 
     /** O foco vai ao item do tema escolhido (ou ao primeiro). */
