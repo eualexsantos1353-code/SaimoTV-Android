@@ -35,6 +35,10 @@ android {
         // Só letras, números, hífen e sublinhado (o formato dos IDs do Trakt); qualquer outra coisa sai.
         val traktId = (System.getenv("TRAKT_CLIENT_ID") ?: "").filter { it.isLetterOrDigit() || it == '-' || it == '_' }
         buildConfigField("String", "TRAKT_CLIENT_ID", "\"$traktId\"")
+        // Chave do TMDB (capas da página Nuvio): do segredo TMDB_KEY do GitHub Actions, nunca do Git.
+        // Sem ela o app compila igual e os títulos aparecem sem capa.
+        val tmdbChave = (System.getenv("TMDB_KEY") ?: "").filter { it.isLetterOrDigit() }
+        buildConfigField("String", "TMDB_KEY", "\"$tmdbChave\"")
     }
 
     signingConfigs {
