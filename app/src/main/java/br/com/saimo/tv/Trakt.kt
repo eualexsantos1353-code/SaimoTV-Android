@@ -100,7 +100,9 @@ object Trakt {
                 }
                 mensagem = "O código expirou. Peça um novo."
             } catch (e: Exception) {
-                mensagem = "Não foi possível conectar ao Trakt. Tente de novo."
+                // O motivo (o código HTTP ou o tipo do erro de rede), para a tela dizer o que houve; nada de segredo.
+                val motivo = e.message?.takeIf { it.startsWith("HTTP") } ?: e.javaClass.simpleName
+                mensagem = "Não foi possível conectar ao Trakt ($motivo). Tente de novo."
                 Log.w(TAG, "entrar: ${e.message}")
             } finally {
                 synchronized(trava) { if (minha == geracao) conectando = false }
