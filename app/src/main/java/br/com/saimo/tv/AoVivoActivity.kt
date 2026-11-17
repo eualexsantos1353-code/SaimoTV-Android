@@ -50,7 +50,7 @@ class AoVivoActivity : TelaComMenu() {
         private const val SO_O_GUIA = "so_o_guia"
         private const val TICK_MS = 20_000L
         /** Parado num canal por este tempo antes de a prévia tocar: descer a lista rápido não abre conexões. */
-        private const val ESPERA_MS = 1_200L
+        private const val ESPERA_MS = 500L
     }
 
     private enum class Filtro(val rotulo: String) {
@@ -283,7 +283,7 @@ class AoVivoActivity : TelaComMenu() {
             .setRenderersFactory(SaimoRenderersFactory(this))
             .setLoadControl(
                 DefaultLoadControl.Builder()
-                    .setBufferDurationsMs(2_500, 8_000, 1_000, 2_000)
+                    .setBufferDurationsMs(1_500, 6_000, 400, 1_000)
                     .setTargetBufferBytes(8 * 1024 * 1024)
                     .build())
             .build()
