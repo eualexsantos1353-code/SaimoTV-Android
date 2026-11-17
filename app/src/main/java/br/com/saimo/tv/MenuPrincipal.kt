@@ -32,11 +32,7 @@ object MenuPrincipal {
             MenuLateral.Item(R.string.agenda_menu, R.drawable.ic_agenda_cal, atual = atual == Destino.AGENDA) {
                 if (atual != Destino.AGENDA) ir(AgendaActivity::class.java)
             },
-            MenuLateral.Item(R.string.menu_eventos, R.drawable.ic_football) { ir(EventosActivity::class.java) },
-            MenuLateral.Item(R.string.menu_on_demand, R.drawable.ic_movie) { ir(OnDemandActivity::class.java) },
-            MenuLateral.Item(R.string.vod_favoritos, R.drawable.ic_star) { ir(GradeActivity.intent(tela, GradeActivity.FAVORITOS)) },
-            MenuLateral.Item(R.string.menu_radios, R.drawable.ic_radio) { ir(RadiosActivity::class.java) },
-            MenuLateral.Item(R.string.menu_ajustes, R.drawable.ic_settings) { ir(AjustesActivity::class.java) },
+            MenuLateral.Item(R.string.astral_menu_config, R.drawable.ic_settings) { ir(AjustesActivity::class.java) },
         )
     }
 }

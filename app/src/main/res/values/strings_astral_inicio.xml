@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="astral_marca">ASTRAL</string>
+    <string name="astral_tv">TV</string>
+    <string name="astral_buscar">Buscar canais</string>
+    <string name="astral_assistir">Assistir agora</string>
+    <string name="astral_tag_serie">SÉRIE</string>
+    <string name="astral_tag_filme">FILME</string>
+    <string name="astral_menu_config">Configurações</string>
+</resources>

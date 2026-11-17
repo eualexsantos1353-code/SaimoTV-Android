@@ -37,177 +37,208 @@
         android:clipChildren="false"
         android:orientation="vertical">
 
-        <!-- O painel: topo com o nome, a busca e o relógio; o bloco grande (Continuar ao vivo, com o que passa
-             agora pelo guia) e os quatro atalhos ao lado. -->
+        <!-- O topo: o logo ASTRAL TV, a busca de canais, o sino das notificações e o relógio. -->
         <LinearLayout
             android:id="@+id/inicioPainel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="48dp"
-            android:layout_marginTop="2dp"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_astral" />
+            <FrameLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_marginStart="10dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
-                    android:text="@string/inicio_painel_nome"
+                    android:letterSpacing="0.16"
+                    android:paddingBottom="10dp"
+                    android:text="@string/astral_marca"
                     android:textColor="?attr/astralTexto"
-                    android:textSize="22sp" />
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
                 <TextView
-                    android:id="@+id/inicioBusca"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginEnd="24dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_busca_inicio"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:text="@string/inicio_painel_buscar"
-                    android:textColor="#B4B2A9"
-                    android:textSize="15sp" />
-                <!-- O sino da Central de Notificações, com o número dos avisos não vistos. -->
-                <FrameLayout
-                    android:id="@+id/inicioSino"
-                    android:layout_width="48dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/ntf_sino_foco"
-                    android:contentDescription="@string/ntf_sino"
-                    android:focusable="true">
-                    <ImageView
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:layout_gravity="center"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_sino" />
-                    <TextView
-                        android:id="@+id/inicioSinoContador"
-                        android:layout_width="wrap_content"
-                        android:layout_height="18dp"
-                        android:layout_gravity="top|end"
-                        android:background="@drawable/ntf_badge"
-                        android:fontFamily="sans-serif-medium"
-                        android:gravity="center"
-                        android:minWidth="18dp"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:textColor="#FFFFFFFF"
-                        android:textSize="11sp"
-                        android:visibility="gone" />
-                </FrameLayout>
-                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/inicioHora"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
-                        android:textColor="?attr/astralTexto"
-                        android:textSize="26sp" />
-                    <TextView
-                        android:id="@+id/inicioData"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#B4B2A9"
-                        android:textSize="13sp" />
-                </LinearLayout>
-            </LinearLayout>
+                    android:layout_gravity="bottom|end"
+                    android:letterSpacing="0.2"
+                    android:text="@string/astral_tv"
+                    android:textColor="#FFC4B5FD"
+                    android:textSize="10sp" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/inicioBusca"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginEnd="24dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_busca_inicio"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/astral_buscar"
+                android:textColor="#B4B2A9"
+                android:textSize="15sp" />
+
+            <!-- O sino da Central de Notificações, com o número dos avisos não vistos. -->
+            <FrameLayout
+                android:id="@+id/inicioSino"
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/ntf_sino_foco"
+                android:contentDescription="@string/ntf_sino"
+                android:focusable="true">
+                <ImageView
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_sino" />
+                <TextView
+                    android:id="@+id/inicioSinoContador"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:layout_gravity="top|end"
+                    android:background="@drawable/ntf_badge"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:minWidth="18dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
+            </FrameLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal">
-
-                <FrameLayout
-                    android:id="@+id/inicioContinuar"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2.2"
-                    android:background="@drawable/bloco_inicio_principal"
-                    android:focusable="true">
-                    <ImageView
-                        android:id="@+id/inicioContinuarLogo"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:layout_gravity="top|end"
-                        android:layout_margin="16dp"
-                        android:background="@drawable/bg_logo_inicio"
-                        android:contentDescription="@null"
-                        android:padding="6dp"
-                        android:scaleType="fitCenter"
-                        android:visibility="gone" />
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:orientation="vertical"
-                        android:padding="18dp">
-                        <TextView
-                            android:id="@+id/inicioContinuarRotulo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawablePadding="6dp"
-                            android:textColor="#CECBF6"
-                            android:textSize="15sp" />
-                        <TextView
-                            android:id="@+id/inicioContinuarCanal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:ellipsize="end"
-                            android:fontFamily="sans-serif-medium"
-                            android:maxLines="1"
-                            android:textColor="?attr/astralTexto"
-                            android:textSize="26sp" />
-                        <TextView
-                            android:id="@+id/inicioContinuarPrograma"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:textColor="#CECBF6"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-                </FrameLayout>
-
-                <!-- Os atalhos: três cartões largos, com ícone, nome e seta. Ajustes fica no menu lateral. -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/inicioProgramacao"
-                        style="@style/AtalhoInicio"
-                        android:text="@string/inicio_painel_programacao" />
-                    <TextView
-                        android:id="@+id/inicioEventos"
-                        style="@style/AtalhoInicio"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/inicio_painel_eventos" />
-                    <TextView
-                        android:id="@+id/inicioFavoritos"
-                        style="@style/AtalhoInicio"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/inicio_painel_favoritos" />
-                </LinearLayout>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/inicioHora"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="?attr/astralTexto"
+                    android:textSize="26sp" />
+                <TextView
+                    android:id="@+id/inicioData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#B4B2A9"
+                    android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>
+
+        <!-- O banner: um filme ou série em alta (TMDB), com "Assistir agora" abrindo no Nuvio. -->
+        <FrameLayout
+            android:id="@+id/inicioBanner"
+            android:layout_width="match_parent"
+            android:layout_height="214dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="48dp"
+            android:background="@drawable/bg_banner_inicio">
+            <ImageView
+                android:id="@+id/bannerFundo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_destaque_lado" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_destaque_baixo" />
+            <LinearLayout
+                android:layout_width="520dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:orientation="vertical"
+                android:padding="22dp">
+                <TextView
+                    android:id="@+id/bannerTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_tag_banner"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingStart="10dp"
+                    android:paddingTop="2dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="2dp"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/bannerTitulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="34sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/bannerMeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="#FFC4B5FD"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/bannerSinopse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="#FFE7E5EE"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/inicioBannerAssistir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/ntf_acao"
+                    android:focusable="true"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:text="@string/astral_assistir"
+                    android:textColor="@color/agenda_texto_pilula"
+                    android:textSize="16sp"
+                    android:visibility="invisible" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/bannerPontos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="18dp"
+                android:orientation="horizontal" />
+        </FrameLayout>
 
         <!-- O destaque antigo (título, informações e sinopse do item focado) fica escondido: a imagem do item
              focado continua ao fundo, e quem mostrava o texto segue funcionando sem aparecer. -->
