@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Sobreposições de tema do ASTRAL. Tema.kt aplica uma de modo (Escuro/Claro)
-     e uma de wallpaper (cor de destaque) sobre o tema de cada tela. -->
+<!-- Sobreposições de tema do ASTRAL. Tema.kt aplica, nesta ordem, sobre o tema de
+     cada tela: modo (Escuro/Claro), wallpaper (fundo e cor de destaque),
+     Liquid Glass (opacidade das superfícies) e animações de janela. -->
 <resources>
     <style name="AstralEscuro" parent="">
         <item name="astralTexto">#FFFFFFFF</item>
@@ -8,54 +9,129 @@
         <item name="astralTextoSutil">#66FFFFFF</item>
     </style>
     <!-- Claro: só os textos por enquanto. As superfícies ainda são escuras;
-         Tema.CLARO_PRONTO continua falso até a fase 2b converter as telas. -->
+         Tema.CLARO_PRONTO continua falso até as telas serem convertidas. -->
     <style name="AstralClaro" parent="">
         <item name="astralTexto">#FF14121C</item>
         <item name="astralTextoSecundario">#FF4A4560</item>
         <item name="astralTextoSutil">#FF8A86A0</item>
     </style>
+
     <style name="AstralFundoRoxo" parent="">
+        <item name="astralFundo">@drawable/wallpaper_roxo</item>
         <item name="astralAccent">#FFB993FF</item>
         <item name="astralAccentSolido">#FF5B3BC4</item>
         <item name="astralAccentFundo">#FF3A2575</item>
         <item name="astralAccentFundo2">#FF22164A</item>
         <item name="astralAccentForte">#FF4A2F9A</item>
         <item name="astralAccentForte2">#FF2A1A62</item>
-        <item name="astralSuperficieA">#FF1D1438</item>
-        <item name="astralSuperficieB">#FF120C26</item>
         <item name="astralBrilho">#FF1B0D3A</item>
     </style>
-    <style name="AstralFundoAzul" parent="">
-        <item name="astralAccent">#FF7DB4FF</item>
-        <item name="astralAccentSolido">#FF2F5FD0</item>
-        <item name="astralAccentFundo">#FF1B3A7A</item>
-        <item name="astralAccentFundo2">#FF112450</item>
-        <item name="astralAccentForte">#FF2A52B0</item>
-        <item name="astralAccentForte2">#FF19327A</item>
-        <item name="astralSuperficieA">#FF0F1A38</item>
-        <item name="astralSuperficieB">#FF0A1226</item>
-        <item name="astralBrilho">#FF0D1B3A</item>
-    </style>
     <style name="AstralFundoVermelho" parent="">
-        <item name="astralAccent">#FFFF8A8A</item>
-        <item name="astralAccentSolido">#FFC23B3B</item>
-        <item name="astralAccentFundo">#FF7A1F2A</item>
-        <item name="astralAccentFundo2">#FF4A121A</item>
-        <item name="astralAccentForte">#FFA8303A</item>
-        <item name="astralAccentForte2">#FF6E1C24</item>
-        <item name="astralSuperficieA">#FF381016</item>
-        <item name="astralSuperficieB">#FF260A0E</item>
-        <item name="astralBrilho">#FF3A0D14</item>
+        <item name="astralFundo">@drawable/wallpaper_vermelho</item>
+        <item name="astralAccent">#FFFF7573</item>
+        <item name="astralAccentSolido">#FFC43D3B</item>
+        <item name="astralAccentFundo">#FF752726</item>
+        <item name="astralAccentFundo2">#FF4A1716</item>
+        <item name="astralAccentForte">#FF99302E</item>
+        <item name="astralAccentForte2">#FF611B1A</item>
+        <item name="astralBrilho">#FF3B0E0D</item>
+    </style>
+    <style name="AstralFundoAzul" parent="">
+        <item name="astralFundo">@drawable/wallpaper_azul</item>
+        <item name="astralAccent">#FF73A6FF</item>
+        <item name="astralAccentSolido">#FF3B6DC4</item>
+        <item name="astralAccentFundo">#FF264375</item>
+        <item name="astralAccentFundo2">#FF16294A</item>
+        <item name="astralAccentForte">#FF2E5599</item>
+        <item name="astralAccentForte2">#FF1A3461</item>
+        <item name="astralBrilho">#FF0D1E3B</item>
     </style>
     <style name="AstralFundoAmbar" parent="">
-        <item name="astralAccent">#FFFFC266</item>
-        <item name="astralAccentSolido">#FFC26A0A</item>
-        <item name="astralAccentFundo">#FF7A4A0F</item>
-        <item name="astralAccentFundo2">#FF4A2C08</item>
-        <item name="astralAccentForte">#FFA8640E</item>
-        <item name="astralAccentForte2">#FF6E4009</item>
-        <item name="astralSuperficieA">#FF38240F</item>
-        <item name="astralSuperficieB">#FF261808</item>
-        <item name="astralBrilho">#FF3A230D</item>
+        <item name="astralFundo">@drawable/wallpaper_ambar</item>
+        <item name="astralAccent">#FFFFB273</item>
+        <item name="astralAccentSolido">#FFC4793B</item>
+        <item name="astralAccentFundo">#FF754926</item>
+        <item name="astralAccentFundo2">#FF4A2D16</item>
+        <item name="astralAccentForte">#FF995E2E</item>
+        <item name="astralAccentForte2">#FF613A1A</item>
+        <item name="astralBrilho">#FF3B210D</item>
+    </style>
+
+    <style name="AstralVidroRoxoDesativado" parent="">
+        <item name="astralSuperficieA">#FF1D1438</item>
+        <item name="astralSuperficieB">#FF120C26</item>
+    </style>
+    <style name="AstralVidroRoxoDiscreto" parent="">
+        <item name="astralSuperficieA">#CC1D1438</item>
+        <item name="astralSuperficieB">#CC120C26</item>
+    </style>
+    <style name="AstralVidroRoxoIntenso" parent="">
+        <item name="astralSuperficieA">#801D1438</item>
+        <item name="astralSuperficieB">#80120C26</item>
+    </style>
+    <style name="AstralVidroVermelhoDesativado" parent="">
+        <item name="astralSuperficieA">#FF381514</item>
+        <item name="astralSuperficieB">#FF260D0C</item>
+    </style>
+    <style name="AstralVidroVermelhoDiscreto" parent="">
+        <item name="astralSuperficieA">#CC381514</item>
+        <item name="astralSuperficieB">#CC260D0C</item>
+    </style>
+    <style name="AstralVidroVermelhoIntenso" parent="">
+        <item name="astralSuperficieA">#80381514</item>
+        <item name="astralSuperficieB">#80260D0C</item>
+    </style>
+    <style name="AstralVidroAzulDesativado" parent="">
+        <item name="astralSuperficieA">#FF142138</item>
+        <item name="astralSuperficieB">#FF0C1626</item>
+    </style>
+    <style name="AstralVidroAzulDiscreto" parent="">
+        <item name="astralSuperficieA">#CC142138</item>
+        <item name="astralSuperficieB">#CC0C1626</item>
+    </style>
+    <style name="AstralVidroAzulIntenso" parent="">
+        <item name="astralSuperficieA">#80142138</item>
+        <item name="astralSuperficieB">#800C1626</item>
+    </style>
+    <style name="AstralVidroAmbarDesativado" parent="">
+        <item name="astralSuperficieA">#FF382414</item>
+        <item name="astralSuperficieB">#FF26180C</item>
+    </style>
+    <style name="AstralVidroAmbarDiscreto" parent="">
+        <item name="astralSuperficieA">#CC382414</item>
+        <item name="astralSuperficieB">#CC26180C</item>
+    </style>
+    <style name="AstralVidroAmbarIntenso" parent="">
+        <item name="astralSuperficieA">#80382414</item>
+        <item name="astralSuperficieB">#8026180C</item>
+    </style>
+
+    <!-- Animações de troca de tela -->
+    <style name="AstralJanelaSuaves" parent="">
+        <item name="android:activityOpenEnterAnimation">@anim/astral_suave_entra</item>
+        <item name="android:activityOpenExitAnimation">@anim/astral_suave_sai</item>
+        <item name="android:activityCloseEnterAnimation">@anim/astral_suave_entra</item>
+        <item name="android:activityCloseExitAnimation">@anim/astral_suave_sai</item>
+    </style>
+    <style name="AstralJanelaDinamicas" parent="">
+        <item name="android:activityOpenEnterAnimation">@anim/astral_dinamica_entra</item>
+        <item name="android:activityOpenExitAnimation">@anim/astral_dinamica_sai</item>
+        <item name="android:activityCloseEnterAnimation">@anim/astral_dinamica_entra</item>
+        <item name="android:activityCloseExitAnimation">@anim/astral_dinamica_sai</item>
+    </style>
+    <style name="AstralJanelaDesativadas" parent="">
+        <item name="android:activityOpenEnterAnimation">@null</item>
+        <item name="android:activityOpenExitAnimation">@null</item>
+        <item name="android:activityCloseEnterAnimation">@null</item>
+        <item name="android:activityCloseExitAnimation">@null</item>
+    </style>
+    <style name="AstralAnimSuaves" parent="">
+        <item name="android:windowAnimationStyle">@style/AstralJanelaSuaves</item>
+    </style>
+    <style name="AstralAnimDinamicas" parent="">
+        <item name="android:windowAnimationStyle">@style/AstralJanelaDinamicas</item>
+    </style>
+    <style name="AstralAnimDesativadas" parent="">
+        <item name="android:windowAnimationStyle">@style/AstralJanelaDesativadas</item>
     </style>
 </resources>

@@ -14,4 +14,5 @@
     <attr name="astralTexto" format="color" />
     <attr name="astralTextoSecundario" format="color" />
     <attr name="astralTextoSutil" format="color" />
+    <attr name="astralFundo" format="reference" />
 </resources>

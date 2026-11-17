@@ -5,25 +5,47 @@ import java.util.Calendar
 import java.util.WeakHashMap
 
 /**
- * Tema do ASTRAL: modo (Claro, Escuro, Automático) e wallpaper (que traz a cor
- * de destaque). As telas apontam para atributos (?attr/astralAccent...) e este
+ * Tema do ASTRAL: modo (Claro, Escuro, Automático), wallpaper (que traz o fundo
+ * e a cor de destaque), Liquid Glass (opacidade das superfícies) e animações de
+ * troca de tela. As telas apontam para atributos (?attr/astralAccent...) e este
  * objeto sobrepõe os valores certos ao tema de cada Activity ao criá-la.
  *
  * O gancho está em SaimoApp: nenhuma Activity precisa chamar nada.
  */
 object Tema {
 
-    /** Falso até a fase 2b converter as superfícies escuras fixas. Com ele
-     *  falso, Claro e Automático ainda mostram o visual escuro. */
+    /** Falso até as superfícies escuras fixas serem convertidas. Com ele falso,
+     *  Claro e Automático ainda mostram o visual escuro. */
     const val CLARO_PRONTO = false
 
     enum class Modo(val chave: String) { CLARO("claro"), ESCURO("escuro"), AUTO("auto") }
 
-    enum class Fundo(val chave: String, val rotulo: String, val estilo: Int) {
-        AMBAR("ambar", "Âmbar/Laranja", R.style.AstralFundoAmbar),
-        VERMELHO("vermelho", "Vermelho", R.style.AstralFundoVermelho),
-        AZUL("azul", "Azul", R.style.AstralFundoAzul),
-        ROXO("roxo", "Roxo", R.style.AstralFundoRoxo)
+    enum class Fundo(
+        val chave: String, val rotulo: String,
+        val estilo: Int, val vidroDesativado: Int, val vidroDiscreto: Int, val vidroIntenso: Int
+    ) {
+        AMBAR("ambar", "Âmbar/Laranja", R.style.AstralFundoAmbar,
+            R.style.AstralVidroAmbarDesativado, R.style.AstralVidroAmbarDiscreto, R.style.AstralVidroAmbarIntenso),
+        VERMELHO("vermelho", "Vermelho", R.style.AstralFundoVermelho,
+            R.style.AstralVidroVermelhoDesativado, R.style.AstralVidroVermelhoDiscreto, R.style.AstralVidroVermelhoIntenso),
+        AZUL("azul", "Azul", R.style.AstralFundoAzul,
+            R.style.AstralVidroAzulDesativado, R.style.AstralVidroAzulDiscreto, R.style.AstralVidroAzulIntenso),
+        ROXO("roxo", "Roxo", R.style.AstralFundoRoxo,
+            R.style.AstralVidroRoxoDesativado, R.style.AstralVidroRoxoDiscreto, R.style.AstralVidroRoxoIntenso)
+    }
+
+    /** Liquid Glass: Discreto (levemente transparente), Intenso (bem transparente)
+     *  e Desativado (superfícies sólidas). Sem desfoque pesado: a TV Box perderia fluidez. */
+    enum class Vidro(val chave: String, val rotulo: String) {
+        DISCRETO("discreto", "Discreto"),
+        INTENSO("intenso", "Intenso"),
+        DESATIVADO("desativado", "Desativado")
+    }
+
+    enum class Animacoes(val chave: String, val rotulo: String, val estilo: Int) {
+        SUAVES("suaves", "Suaves", R.style.AstralAnimSuaves),
+        DINAMICAS("dinamicas", "Dinâmicas", R.style.AstralAnimDinamicas),
+        DESATIVADAS("desativadas", "Desativadas", R.style.AstralAnimDesativadas)
     }
 
     /** Telas de vídeo não são recriadas no meio da reprodução. */
@@ -38,6 +60,14 @@ object Tema {
     var fundo: Fundo
         get() = Fundo.values().firstOrNull { it.chave == Preferencias.temaFundo } ?: Fundo.ROXO
         set(v) { Preferencias.temaFundo = v.chave; mudou() }
+
+    var vidro: Vidro
+        get() = Vidro.values().firstOrNull { it.chave == Preferencias.temaVidro } ?: Vidro.DISCRETO
+        set(v) { Preferencias.temaVidro = v.chave; mudou() }
+
+    var animacoes: Animacoes
+        get() = Animacoes.values().firstOrNull { it.chave == Preferencias.temaAnim } ?: Animacoes.SUAVES
+        set(v) { Preferencias.temaAnim = v.chave; mudou() }
 
     /** Minutos desde a meia-noite em que o Claro começa (padrão 07:00). */
     var claroAs: Int
@@ -68,12 +98,22 @@ object Tema {
         }
     }
 
-    private fun assinatura() = (if (claroAgora()) "c" else "e") + fundo.chave
+    private fun assinatura() =
+        (if (claroAgora()) "c" else "e") + fundo.chave + vidro.chave + animacoes.chave
 
     /** Chamado por SaimoApp logo depois do onCreate da Activity, antes do layout. */
     fun aplicar(activity: Activity) {
-        activity.theme.applyStyle(if (claroAgora()) R.style.AstralClaro else R.style.AstralEscuro, true)
-        activity.theme.applyStyle(fundo.estilo, true)
+        val t = activity.theme
+        t.applyStyle(if (claroAgora()) R.style.AstralClaro else R.style.AstralEscuro, true)
+        val f = fundo
+        t.applyStyle(f.estilo, true)
+        t.applyStyle(
+            when (vidro) {
+                Vidro.DISCRETO -> f.vidroDiscreto
+                Vidro.INTENSO -> f.vidroIntenso
+                Vidro.DESATIVADO -> f.vidroDesativado
+            }, true)
+        t.applyStyle(animacoes.estilo, true)
         aplicadas[activity] = assinatura()
     }
 

@@ -128,6 +128,16 @@ object Preferencias {
         get() = prefs.getInt("temaEscuroAs", 19 * 60)
         set(valor) = prefs.edit().putInt("temaEscuroAs", valor).apply()
 
+    /** Liquid Glass: "discreto", "intenso" ou "desativado". */
+    var temaVidro: String
+        get() = prefs.getString("temaVidro", "discreto") ?: "discreto"
+        set(valor) = prefs.edit().putString("temaVidro", valor).apply()
+
+    /** Animações: "suaves", "dinamicas" ou "desativadas". */
+    var temaAnim: String
+        get() = prefs.getString("temaAnim", "suaves") ?: "suaves"
+        set(valor) = prefs.edit().putString("temaAnim", valor).apply()
+
     /** ID curto do aparelho, para suporte: o mesmo que a telemetria usa. */
     fun idCurto(context: Context): String =
         context.getSharedPreferences("telemetria", Context.MODE_PRIVATE)

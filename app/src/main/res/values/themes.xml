@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.Saimo" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@drawable/fundo_app</item>
+        <item name="android:windowBackground">?attr/astralFundo</item>
+        <item name="astralFundo">@drawable/wallpaper_roxo</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:colorAccent">?attr/astralAccent</item>

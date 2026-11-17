@@ -114,7 +114,55 @@ class AjustesActivity : TelaComMenu() {
         else -> "Desligado"
     }
 
-    private fun linhas(): List<Linha> = listOf(
+    private fun hora(min: Int) = "%02d:%02d".format(min / 60, min % 60)
+
+    private fun rotuloModo(m: Tema.Modo) = when (m) {
+        Tema.Modo.ESCURO -> "Escuro"
+        Tema.Modo.CLARO -> if (Tema.CLARO_PRONTO) "Claro" else "Claro (em breve)"
+        Tema.Modo.AUTO -> if (Tema.CLARO_PRONTO) "Automático" else "Automático (em breve)"
+    }
+
+    private fun linhasAparencia(): List<Linha> {
+        val horarios = (0 until 48).map { it * 30 }
+        val base = listOf<Linha>(
+            Secao("Aparência"),
+            Opcao("Tema", { rotuloModo(Tema.modo) }) {
+                escolher("Tema", Tema.Modo.values().toList(), Tema.modo, { rotuloModo(it) }) { novo ->
+                    if (!Tema.CLARO_PRONTO && novo != Tema.Modo.ESCURO) {
+                        Toast.makeText(this, "O tema Claro está em preparação. Por enquanto só o Escuro.",
+                            Toast.LENGTH_LONG).show()
+                    } else {
+                        Tema.modo = novo
+                    }
+                }
+            }
+        )
+        val auto = if (Tema.modo == Tema.Modo.AUTO) listOf<Linha>(
+            Opcao("Tema Claro começa às", { hora(Tema.claroAs) }) {
+                escolher("Tema Claro começa às", horarios, Tema.claroAs, { hora(it) }) { Tema.claroAs = it }
+            },
+            Opcao("Tema Escuro começa às", { hora(Tema.escuroAs) }) {
+                escolher("Tema Escuro começa às", horarios, Tema.escuroAs, { hora(it) }) { Tema.escuroAs = it }
+            }
+        ) else emptyList()
+        val resto = listOf<Linha>(
+            Opcao("Wallpaper e cor de destaque", { Tema.fundo.rotulo }) {
+                escolher("Wallpaper e cor de destaque", Tema.Fundo.values().toList(), Tema.fundo,
+                    { it.rotulo }) { Tema.fundo = it }
+            },
+            Opcao("Liquid Glass", { Tema.vidro.rotulo }) {
+                escolher("Liquid Glass", Tema.Vidro.values().toList(), Tema.vidro,
+                    { it.rotulo }) { Tema.vidro = it }
+            },
+            Opcao("Animações", { Tema.animacoes.rotulo }) {
+                escolher("Animações", Tema.Animacoes.values().toList(), Tema.animacoes,
+                    { it.rotulo }) { Tema.animacoes = it }
+            }
+        )
+        return base + auto + resto
+    }
+
+    private fun linhas(): List<Linha> = linhasAparencia() + listOf(
         Secao(getString(R.string.ajustes_reproducao)),
         Opcao(getString(R.string.ajustes_versao), { Titulos.rotulo(Preferencias.versao) }) {
             escolher(getString(R.string.ajustes_versao), listOf("dub", "leg"), Preferencias.versao,
@@ -225,7 +273,7 @@ class AjustesActivity : TelaComMenu() {
     private fun redesenhar() {
         val antes = lista.focusedChild?.let { lista.getChildAdapterPosition(it) }
             ?.takeIf { it != RecyclerView.NO_POSITION } ?: posicaoEmFoco
-        adaptador.notifyDataSetChanged()
+        adaptador.linhas = linhas()
         if (antes != RecyclerView.NO_POSITION) {
             lista.post { lista.findViewHolderForAdapterPosition(antes)?.itemView?.requestFocus() }
         }
