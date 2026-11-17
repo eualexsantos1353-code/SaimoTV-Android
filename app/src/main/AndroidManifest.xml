@@ -19,6 +19,9 @@
 
     <!-- Minhas listas: saber se a TV tem um seletor de arquivos de verdade. -->
     <queries>
+        <!-- Nuvio: a página Nuvio o abre; sem isto o Android 11+ esconde o pacote. -->
+        <package android:name="com.nuvio.tv" />
+        <package android:name="com.nuvio.app" />
         <intent>
             <action android:name="android.intent.action.OPEN_DOCUMENT" />
             <category android:name="android.intent.category.OPENABLE" />
@@ -205,5 +208,6 @@
                 android:minWidth="720dp" android:minHeight="405dp" />
         </activity>
         <activity android:name=".AoVivoActivity" android:exported="false" android:launchMode="singleTop" />
+        <activity android:name=".NuvioActivity" android:exported="false" android:launchMode="singleTop" />
     </application>
 </manifest>

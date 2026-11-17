@@ -317,15 +317,8 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
      * a partir da busca, do bloco grande e do começo de cada fileira; para a direita ele volta ao bloco grande.
      */
     private fun montarMenuLateral() {
-        menuLateral = MenuLateral(this, findViewById(R.id.inicioMenu), listOf(
-            MenuLateral.Item(R.string.menu_inicio, R.drawable.ic_home, atual = true) { focarPainel() },
-            MenuLateral.Item(R.string.menu_ao_vivo, R.drawable.ic_live_tv) { abrirAoVivo() },
-            MenuLateral.Item(R.string.menu_eventos, R.drawable.ic_football) { startActivity(Intent(this, EventosActivity::class.java)) },
-            MenuLateral.Item(R.string.menu_on_demand, R.drawable.ic_movie) { startActivity(Intent(this, OnDemandActivity::class.java)) },
-            MenuLateral.Item(R.string.vod_favoritos, R.drawable.ic_star) { startActivity(GradeActivity.intent(this, GradeActivity.FAVORITOS)) },
-            MenuLateral.Item(R.string.menu_radios, R.drawable.ic_radio) { startActivity(Intent(this, RadiosActivity::class.java)) },
-            MenuLateral.Item(R.string.menu_ajustes, R.drawable.ic_settings) { startActivity(Intent(this, AjustesActivity::class.java)) },
-        ), blocoContinuar) { cabecalhoPadrao() }
+        menuLateral = MenuLateral(this, findViewById(R.id.inicioMenu),
+            MenuPrincipal.itens(this, Destino.INICIO) { focarPainel() }, blocoContinuar) { cabecalhoPadrao() }
         for (id in listOf(R.id.inicioBusca, R.id.inicioContinuar)) findViewById<View>(id).nextFocusLeftId = menuLateral.primeiroId
     }
 

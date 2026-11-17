@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="menu_nuvio">Nuvio</string>
+    <string name="nuvio_marca">NUVIO</string>
+    <string name="nuvio_frase">Suas séries e filmes em um só lugar</string>
+    <string name="nuvio_abrir">Abrir Nuvio</string>
+    <string name="nuvio_continuar">Continuar assistindo</string>
+    <string name="nuvio_minha_lista">Minha Lista</string>
+    <string name="nuvio_vazio">Nenhum título para mostrar.</string>
+    <string name="nuvio_sem_app">O Nuvio não está instalado nesta TV.</string>
+    <string name="nuvio_falha">Não foi possível abrir o Nuvio.</string>
+</resources>
