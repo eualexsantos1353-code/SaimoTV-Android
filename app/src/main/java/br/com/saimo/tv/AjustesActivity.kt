@@ -3,6 +3,7 @@ package br.com.saimo.tv
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,17 +22,20 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
- * Ajustes: cada linha mostra o valor atual e OK troca.
+ * Configurações (etapa 5): o menu das categorias à esquerda e o conteúdo da categoria aberta à direita.
  *
- * Tudo aqui tem um padrão bom — ninguém precisa passar por esta tela para o
- * app funcionar bem. Ela existe para quem quer legenda maior, prefere
- * legendado, quer abrir direto no último canal, ou precisa do número do
- * aparelho para pedir ajuda.
+ * Personalização reúne Aparência (a tela nova, ver [AparenciaPainel]) e Tela inicial (ainda por definir).
+ * Controle e Acessibilidade e Sobre o ASTRAL aguardam os documentos próprios. "Mais ajustes" guarda, sem
+ * mudar nada, a lista que já existia (reprodução, listas, conexão, sistema) até esses documentos chegarem.
+ *
+ * Mudar o wallpaper, o Liquid Glass ou as animações recria a tela: o estado (categoria, subpágina e item
+ * com foco) vai no onSaveInstanceState e volta no onCreate.
  */
 @UnstableApi
 class AjustesActivity : TelaComMenu() {
 
     override val aba = Aba.AJUSTES
+    override val semMenu = true
 
 
     companion object {
@@ -81,16 +85,173 @@ class AjustesActivity : TelaComMenu() {
         else MinhasListasTela.mostrarArquivos(this, alvoArquivo, ::pedirArquivo) { redesenhar() }
     }
 
+    private enum class Cat { NENHUMA, PERS, CONTROLE, MAIS, SOBRE }
+
+    private var categoria = Cat.NENHUMA
+    private var subpagina = ""
+    private var chaveFoco: String? = null
+    private var primeiroFoco = true
+
+    private lateinit var linhasMenu: Map<Cat, View>
+    private lateinit var tituloPg: TextView
+    private lateinit var descricaoPg: TextView
+    private lateinit var caminhoPg: TextView
+    private lateinit var textoCorpo: TextView
+    private lateinit var textoNota: TextView
+    private lateinit var pgTexto: View
+    private lateinit var pgPers: View
+    private lateinit var pgAparencia: View
+    private lateinit var aparencia: AparenciaPainel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ajustes)
-        findViewById<TextView>(R.id.ajustesSobre).text = getString(R.string.ajustes_sobre,
-            BuildConfig.VERSION_NAME, Preferencias.idCurto(this))
+        tituloPg = findViewById(R.id.ajTitulo)
+        descricaoPg = findViewById(R.id.ajDescricao)
+        caminhoPg = findViewById(R.id.ajCaminho)
+        textoCorpo = findViewById(R.id.ajTextoCorpo)
+        textoNota = findViewById(R.id.ajTextoNota)
+        pgTexto = findViewById(R.id.ajPgTexto)
+        pgPers = findViewById(R.id.ajPgPers)
+        pgAparencia = findViewById(R.id.ajPgAparencia)
         lista = findViewById(R.id.ajustesLista)
         lista.layoutManager = LinearLayoutManager(this)
         lista.adapter = adaptador
         adaptador.linhas = linhas()
-        focarQuandoPronto { lista.findViewHolderForAdapterPosition(1)?.itemView }
+
+        aparencia = AparenciaPainel(this, findViewById(R.id.ajAparenciaConteudo), R.id.ajCatPers, ::escolherHora) { chaveFoco = it }
+
+        linhasMenu = mapOf(
+            Cat.PERS to findViewById<View>(R.id.ajCatPers),
+            Cat.CONTROLE to findViewById<View>(R.id.ajCatControle),
+            Cat.MAIS to findViewById<View>(R.id.ajCatMais),
+            Cat.SOBRE to findViewById<View>(R.id.ajCatSobre),
+        )
+        for ((c, v) in linhasMenu) {
+            v.setOnClickListener { abrirCategoria(c) }
+            // Seta para a direita: abre a categoria e leva o foco para dentro dela.
+            v.setOnKeyListener { _, tecla, evento ->
+                if (tecla == KeyEvent.KEYCODE_DPAD_RIGHT && evento.action == KeyEvent.ACTION_DOWN) { abrirCategoria(c); true } else false
+            }
+            // Andar pelo menu mostra a categoria; o primeiro foco, ao abrir a tela, deixa a tela de boas-vindas.
+            v.setOnFocusChangeListener { _, tem ->
+                if (tem) {
+                    val primeira = primeiroFoco
+                    primeiroFoco = false
+                    if (!primeira) mostrarPagina(c, "")
+                }
+            }
+        }
+        findViewById<View>(R.id.ajRowAparencia).apply {
+            nextFocusLeftId = R.id.ajCatPers
+            setOnClickListener {
+                mostrarPagina(Cat.PERS, "aparencia")
+                aparencia.focarPrimeiro()
+            }
+        }
+        findViewById<View>(R.id.ajRowTelaInicial).apply {
+            nextFocusLeftId = R.id.ajCatPers
+            setOnClickListener {
+                mostrarPagina(Cat.PERS, "telainicial")
+                linhasMenu[Cat.PERS]?.requestFocus()
+            }
+        }
+
+        val salva = savedInstanceState?.getString("cat")?.let { n -> Cat.values().firstOrNull { it.name == n } }
+        if (salva != null && salva != Cat.NENHUMA) {
+            primeiroFoco = false
+            mostrarPagina(salva, savedInstanceState?.getString("sub") ?: "")
+            val chave = savedInstanceState?.getString("chave")
+            focarQuandoPronto {
+                chave?.let { pgAparencia.findViewWithTag<View>(it) } ?: linhasMenu.getValue(salva)
+            }
+        } else {
+            mostrarPagina(Cat.NENHUMA, "")
+            focarQuandoPronto { linhasMenu.getValue(Cat.PERS) }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("cat", categoria.name)
+        outState.putString("sub", subpagina)
+        outState.putString("chave", chaveFoco ?: (currentFocus?.tag as? String))
+    }
+
+    private fun cabecalhoPg(t: Int, d: Int?) {
+        tituloPg.setText(t)
+        if (d != null) { descricaoPg.setText(d); descricaoPg.visibility = View.VISIBLE } else descricaoPg.visibility = View.GONE
+    }
+
+    private fun corpoTexto(c: CharSequence, nota: Int?) {
+        textoCorpo.text = c
+        textoCorpo.visibility = if (c.isEmpty()) View.GONE else View.VISIBLE
+        if (nota != null) { textoNota.setText(nota); textoNota.visibility = View.VISIBLE } else textoNota.visibility = View.GONE
+        pgTexto.visibility = View.VISIBLE
+    }
+
+    /** Mostra a categoria (e a subpágina) no painel da direita, sem tirar o foco de onde está. */
+    private fun mostrarPagina(c: Cat, s: String) {
+        categoria = c
+        subpagina = s
+        for ((k, v) in linhasMenu) v.isSelected = k == c
+        pgTexto.visibility = View.GONE
+        pgPers.visibility = View.GONE
+        pgAparencia.visibility = View.GONE
+        lista.visibility = View.GONE
+        caminhoPg.visibility = View.GONE
+        when {
+            c == Cat.NENHUMA -> { cabecalhoPg(R.string.aj_configuracoes, R.string.aj_config_desc); corpoTexto("", R.string.aj_config_dica) }
+            c == Cat.PERS && s == "aparencia" -> {
+                cabecalhoPg(R.string.aj_aparencia, R.string.aj_aparencia_desc)
+                caminhoPg.visibility = View.VISIBLE
+                aparencia.montar()
+                pgAparencia.visibility = View.VISIBLE
+            }
+            c == Cat.PERS && s == "telainicial" -> {
+                cabecalhoPg(R.string.aj_tela_inicial, R.string.aj_tela_inicial_linha)
+                corpoTexto(getString(R.string.aj_tela_inicial_nota), null)
+            }
+            c == Cat.PERS -> { cabecalhoPg(R.string.aj_pers, R.string.aj_pers_desc); pgPers.visibility = View.VISIBLE }
+            c == Cat.CONTROLE -> { cabecalhoPg(R.string.aj_controle, null); corpoTexto(getString(R.string.aj_controle_nota), null) }
+            c == Cat.MAIS -> { cabecalhoPg(R.string.aj_mais, R.string.aj_mais_desc); lista.visibility = View.VISIBLE }
+            else -> {
+                cabecalhoPg(R.string.aj_sobre, null)
+                corpoTexto(getString(R.string.ajustes_sobre, BuildConfig.VERSION_NAME, Preferencias.idCurto(this)), R.string.aj_sobre_nota)
+            }
+        }
+    }
+
+    /** OK ou seta para a direita numa categoria: abre e leva o foco ao primeiro item dela (se houver). */
+    private fun abrirCategoria(c: Cat) {
+        mostrarPagina(c, "")
+        when (c) {
+            Cat.PERS -> findViewById<View>(R.id.ajRowAparencia).requestFocus()
+            Cat.MAIS -> lista.postDelayed({ lista.findViewHolderForAdapterPosition(1)?.itemView?.requestFocus() }, 80)
+            else -> {}
+        }
+    }
+
+    private fun escolherHora(tituloPg: String, atual: Int, aoEscolher: (Int) -> Unit) {
+        escolher(tituloPg, (0 until 48).map { it * 30 }, atual, { "%02d:%02d".format(it / 60, it % 60) }, aoEscolher)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_ESCAPE) {
+            // Numa subpágina, VOLTAR leva à lista da categoria; dentro do painel, ao menu; no menu, sai.
+            if (subpagina.isNotEmpty()) {
+                val linha = if (subpagina == "aparencia") R.id.ajRowAparencia else R.id.ajRowTelaInicial
+                mostrarPagina(Cat.PERS, "")
+                findViewById<View>(linha).requestFocus()
+                return true
+            }
+            val foco = currentFocus
+            if (categoria != Cat.NENHUMA && foco != null && !linhasMenu.containsValue(foco)) {
+                linhasMenu[categoria]?.requestFocus()
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
     override fun onResume() {
@@ -114,55 +275,7 @@ class AjustesActivity : TelaComMenu() {
         else -> "Desligado"
     }
 
-    private fun hora(min: Int) = "%02d:%02d".format(min / 60, min % 60)
-
-    private fun rotuloModo(m: Tema.Modo) = when (m) {
-        Tema.Modo.ESCURO -> "Escuro"
-        Tema.Modo.CLARO -> if (Tema.CLARO_PRONTO) "Claro" else "Claro (em breve)"
-        Tema.Modo.AUTO -> if (Tema.CLARO_PRONTO) "Automático" else "Automático (em breve)"
-    }
-
-    private fun linhasAparencia(): List<Linha> {
-        val horarios = (0 until 48).map { it * 30 }
-        val base = listOf<Linha>(
-            Secao("Aparência"),
-            Opcao("Tema", { rotuloModo(Tema.modo) }) {
-                escolher("Tema", Tema.Modo.values().toList(), Tema.modo, { rotuloModo(it) }) { novo ->
-                    if (!Tema.CLARO_PRONTO && novo != Tema.Modo.ESCURO) {
-                        Toast.makeText(this, "O tema Claro está em preparação. Por enquanto só o Escuro.",
-                            Toast.LENGTH_LONG).show()
-                    } else {
-                        Tema.modo = novo
-                    }
-                }
-            }
-        )
-        val auto = if (Tema.modo == Tema.Modo.AUTO) listOf<Linha>(
-            Opcao("Tema Claro começa às", { hora(Tema.claroAs) }) {
-                escolher("Tema Claro começa às", horarios, Tema.claroAs, { hora(it) }) { Tema.claroAs = it }
-            },
-            Opcao("Tema Escuro começa às", { hora(Tema.escuroAs) }) {
-                escolher("Tema Escuro começa às", horarios, Tema.escuroAs, { hora(it) }) { Tema.escuroAs = it }
-            }
-        ) else emptyList()
-        val resto = listOf<Linha>(
-            Opcao("Wallpaper e cor de destaque", { Tema.fundo.rotulo }) {
-                escolher("Wallpaper e cor de destaque", Tema.Fundo.values().toList(), Tema.fundo,
-                    { it.rotulo }) { Tema.fundo = it }
-            },
-            Opcao("Liquid Glass", { Tema.vidro.rotulo }) {
-                escolher("Liquid Glass", Tema.Vidro.values().toList(), Tema.vidro,
-                    { it.rotulo }) { Tema.vidro = it }
-            },
-            Opcao("Animações", { Tema.animacoes.rotulo }) {
-                escolher("Animações", Tema.Animacoes.values().toList(), Tema.animacoes,
-                    { it.rotulo }) { Tema.animacoes = it }
-            }
-        )
-        return base + auto + resto
-    }
-
-    private fun linhas(): List<Linha> = linhasAparencia() + listOf(
+    private fun linhas(): List<Linha> = listOf(
         Secao(getString(R.string.ajustes_reproducao)),
         Opcao(getString(R.string.ajustes_versao), { Titulos.rotulo(Preferencias.versao) }) {
             escolher(getString(R.string.ajustes_versao), listOf("dub", "leg"), Preferencias.versao,
@@ -329,6 +442,7 @@ class AjustesActivity : TelaComMenu() {
                     holder.itemView.findViewById<TextView>(R.id.itemDetalhe).apply {
                         text = linha.valor(); visibility = View.VISIBLE
                     }
+                    holder.itemView.nextFocusLeftId = R.id.ajCatMais
                     holder.itemView.setOnClickListener { linha.acao() }
                     holder.itemView.setOnFocusChangeListener { _, tem ->
                         if (tem) posicaoEmFoco = holder.bindingAdapterPosition

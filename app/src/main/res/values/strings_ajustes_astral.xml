@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="aj_marca">ASTRAL</string>
+    <string name="aj_cabecalho">CONFIGURAÇÕES</string>
+
+    <string name="aj_configuracoes">Configurações</string>
+    <string name="aj_config_desc">Gerencie as preferências e informações do ASTRAL.</string>
+    <string name="aj_config_dica">Escolha uma categoria no menu lateral.</string>
+
+    <string name="aj_pers">Personalização</string>
+    <string name="aj_pers_desc">Ajuste a aparência e a experiência visual do seu ASTRAL.</string>
+    <string name="aj_aparencia">Aparência</string>
+    <string name="aj_aparencia_linha">Temas, wallpapers, Liquid Glass e animações</string>
+    <string name="aj_aparencia_desc">Personalize o visual do ASTRAL: tema, plano de fundo e efeitos.</string>
+    <string name="aj_caminho_aparencia">PERSONALIZAÇÃO  /  APARÊNCIA</string>
+    <string name="aj_tela_inicial">Tela inicial</string>
+    <string name="aj_tela_inicial_linha">Organização e personalização da página inicial</string>
+    <string name="aj_tela_inicial_nota">As opções da Tela inicial serão definidas em uma etapa própria.</string>
+
+    <string name="aj_controle">Controle e Acessibilidade</string>
+    <string name="aj_controle_nota">As opções de controle remoto, navegação e acessibilidade serão definidas em uma etapa própria.</string>
+    <string name="aj_mais">Mais ajustes</string>
+    <string name="aj_mais_desc">Reprodução, listas, conexão e sistema.</string>
+    <string name="aj_sobre">Sobre o ASTRAL</string>
+    <string name="aj_sobre_nota">As informações do projeto serão definidas em uma etapa própria.</string>
+
+    <string name="aj_tema">Tema</string>
+    <string name="aj_tema_dica">Escolha como a interface será exibida.</string>
+    <string name="aj_tema_claro">Claro</string>
+    <string name="aj_tema_escuro">Escuro</string>
+    <string name="aj_tema_auto">Automático</string>
+    <string name="aj_tema_aviso">O visual claro ainda está em preparação: por enquanto a interface continua escura.</string>
+    <string name="aj_ativar_claro">Ativar tema Claro</string>
+    <string name="aj_ativar_escuro">Ativar tema Escuro</string>
+    <string name="aj_fundo">Plano de fundo</string>
+    <string name="aj_fundo_dica">As cores de destaque acompanham o wallpaper selecionado.</string>
+    <string name="aj_vidro">Liquid Glass</string>
+    <string name="aj_vidro_dica">Transparência dos menus, painéis e notificações.</string>
+    <string name="aj_anim">Animações</string>
+    <string name="aj_anim_dica">Transições entre telas e painéis.</string>
+</resources>
