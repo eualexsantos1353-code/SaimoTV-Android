@@ -14,7 +14,12 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.DefaultLoadControl
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil3.dispose
@@ -28,9 +33,11 @@ import kotlinx.coroutines.launch
  * TV ao Vivo (etapa 2): marca e busca no topo, categorias, lista de canais à esquerda,
  * prévia à direita e destaques esportivos embaixo.
  *
- * Não toca vídeo aqui. A prévia mostra a imagem do canal e o programa no ar (do guia que já
- * existe); o OK abre o player em tela cheia, que é o mecanismo de reprodução de sempre.
- * Nada é inventado: sem guia, a prévia diz "Sem guia para este canal".
+ * A prévia mostra a imagem do canal e o programa no ar (do guia que já existe) e, depois de
+ * [ESPERA_MS] parado no canal, um mini player mudo com o mesmo mecanismo de reprodução do player
+ * de sempre ([Playback.mediaSource]). Um único player: é solto ao sair da tela, ao abrir o canal
+ * e ao trocar de canal. Sem vídeo (carregando ou falha), a prévia segue com logo e programa.
+ * O OK abre o player em tela cheia. Nada é inventado: sem guia, "Sem guia para este canal".
  */
 @UnstableApi
 class AoVivoActivity : TelaComMenu() {
@@ -42,6 +49,8 @@ class AoVivoActivity : TelaComMenu() {
         fun abrir(context: Context) = context.startActivity(Intent(context, AoVivoActivity::class.java))
         private const val SO_O_GUIA = "so_o_guia"
         private const val TICK_MS = 20_000L
+        /** Parado num canal por este tempo antes de a prévia tocar: descer a lista rápido não abre conexões. */
+        private const val ESPERA_MS = 1_200L
     }
 
     private enum class Filtro(val rotulo: String) {
@@ -67,8 +76,14 @@ class AoVivoActivity : TelaComMenu() {
     private val previaLogo by lazy { findViewById<ImageView>(R.id.previaLogo) }
     private val previaLogoGrande by lazy { findViewById<ImageView>(R.id.previaLogoGrande) }
     private val previaImagem by lazy { findViewById<ImageView>(R.id.previaImagem) }
+    private val previaVideo by lazy { findViewById<PlayerView>(R.id.previaVideo) }
+    private val previaEstado by lazy { findViewById<TextView>(R.id.previaEstado) }
+    private var player: ExoPlayer? = null
+    private var canalTocando: String? = null
     private var logoCarregado: String? = null
     private var imagemCarregada: String? = null
+
+    private val iniciarVideo = Runnable { emFoco?.let { tocarPrevia(it) } }
 
     private val tick = object : Runnable {
         override fun run() {
@@ -120,10 +135,18 @@ class AoVivoActivity : TelaComMenu() {
         if (iniciou && ::lista.isInitialized && todos.isNotEmpty()) {
             Favorites.load(this)
             carregarCanais(manterFoco = true)
+            emFoco?.let { agendarVideo(it) }
         }
     }
 
+    override fun onPause() {
+        // Solta o vídeo antes de qualquer outra tela tocar: o TV Box não aguenta dois players.
+        pararVideo()
+        super.onPause()
+    }
+
     override fun onDestroy() {
+        pararVideo()
         handler.removeCallbacksAndMessages(null)
         super.onDestroy()
     }
@@ -151,6 +174,7 @@ class AoVivoActivity : TelaComMenu() {
         vazio.visibility = if (visiveis.isEmpty()) View.VISIBLE else View.GONE
         if (visiveis.isEmpty()) {
             emFoco = null
+            pararVideo()
             limparPrevia()
             return
         }
@@ -234,7 +258,95 @@ class AoVivoActivity : TelaComMenu() {
             if (poster != null) previaImagem.load(poster)
             else { previaImagem.dispose(); previaImagem.setImageDrawable(null) }
         }
-        previaLogoGrande.visibility = if (poster == null) View.VISIBLE else View.GONE
+        atualizarLogoGrande()
+    }
+
+    /** O logo grande só aparece sem imagem do programa e sem vídeo por cima. */
+    private fun atualizarLogoGrande() {
+        previaLogoGrande.visibility =
+            if (imagemCarregada == null && previaVideo.visibility != View.VISIBLE) View.VISIBLE else View.GONE
+    }
+
+    // MARK: - Mini player
+
+    private fun agendarVideo(canal: Channel) {
+        handler.removeCallbacks(iniciarVideo)
+        if (canalTocando == canal.name && player != null) return
+        pararVideo()
+        handler.postDelayed(iniciarVideo, ESPERA_MS)
+    }
+
+    private fun tocarPrevia(canal: Channel) {
+        val fonte = canal.sources.firstOrNull() ?: return
+        pararVideo()
+        val p = ExoPlayer.Builder(this)
+            .setRenderersFactory(SaimoRenderersFactory(this))
+            .setLoadControl(
+                DefaultLoadControl.Builder()
+                    .setBufferDurationsMs(2_500, 8_000, 1_000, 2_000)
+                    .setTargetBufferBytes(8 * 1024 * 1024)
+                    .build())
+            .build()
+        p.volume = 0f
+        // Prévia pequena: o vídeo não precisa passar de 720p (480p no aparelho com pouca memória).
+        val (largura, altura) = if (Aparelho.poucaMemoria) 854 to 480 else 1280 to 720
+        p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
+            .setMaxVideoSize(largura, altura).build()
+        p.addListener(object : Player.Listener {
+            override fun onRenderedFirstFrame() {
+                if (player !== p) return
+                previaVideo.visibility = View.VISIBLE
+                previaEstado.visibility = View.GONE
+                atualizarLogoGrande()
+            }
+
+            override fun onPlaybackStateChanged(estado: Int) {
+                if (player !== p) return
+                if (estado == Player.STATE_BUFFERING && previaVideo.visibility != View.VISIBLE) {
+                    previaEstado.text = "Carregando prévia…"
+                    previaEstado.visibility = View.VISIBLE
+                }
+            }
+
+            override fun onPlayerError(erro: PlaybackException) {
+                if (player !== p) return
+                // Sem nova tentativa: a prévia volta a ser só logo e programa.
+                liberarPlayer()
+                previaEstado.text = "Prévia indisponível"
+                previaEstado.visibility = View.VISIBLE
+            }
+        })
+        player = p
+        canalTocando = canal.name
+        previaVideo.player = p
+        previaVideo.useController = false
+        previaVideo.setShutterBackgroundColor(android.graphics.Color.TRANSPARENT)
+        try {
+            p.setMediaSource(Playback.mediaSource(this, fonte))
+            p.prepare()
+            p.playWhenReady = true
+        } catch (e: Exception) {
+            liberarPlayer()
+            previaEstado.text = "Prévia indisponível"
+            previaEstado.visibility = View.VISIBLE
+        }
+    }
+
+    private fun liberarPlayer() {
+        val p = player ?: return
+        player = null
+        canalTocando = null
+        previaVideo.player = null
+        previaVideo.visibility = View.GONE
+        atualizarLogoGrande()
+        p.release()
+    }
+
+    /** Cancela a espera e solta o player; a prévia volta a mostrar logo e programa. */
+    private fun pararVideo() {
+        handler.removeCallbacks(iniciarVideo)
+        liberarPlayer()
+        if (::lista.isInitialized) previaEstado.visibility = View.GONE
     }
 
     private fun atualizarGuia() {
@@ -285,6 +397,7 @@ class AoVivoActivity : TelaComMenu() {
     // MARK: - Ações
 
     private fun abrirCanal(canal: Channel) {
+        pararVideo()
         startActivity(Intent(this, MainActivity::class.java).putExtra(MainActivity.EXTRA_CANAL, canal.name))
     }
 
@@ -328,7 +441,10 @@ class AoVivoActivity : TelaComMenu() {
             val holder = LinhaCanal(
                 LayoutInflater.from(parent.context).inflate(R.layout.item_ao_vivo_canal, parent, false))
             holder.itemView.setOnFocusChangeListener { _, tem ->
-                if (tem) itens.getOrNull(holder.bindingAdapterPosition)?.let { mostrarPrevia(it) }
+                if (tem) itens.getOrNull(holder.bindingAdapterPosition)?.let {
+                    mostrarPrevia(it)
+                    agendarVideo(it)
+                }
             }
             holder.itemView.setOnClickListener {
                 itens.getOrNull(holder.bindingAdapterPosition)?.let { abrirCanal(it) }

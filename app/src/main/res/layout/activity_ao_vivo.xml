@@ -102,6 +102,12 @@
                 android:contentDescription="@null"
                 android:scaleType="centerCrop" />
 
+            <androidx.media3.ui.PlayerView
+                android:id="@+id/previaVideo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
             <ImageView
                 android:id="@+id/previaLogoGrande"
                 android:layout_width="150dp"
@@ -110,6 +116,21 @@
                 android:layout_marginBottom="40dp"
                 android:contentDescription="@null"
                 android:scaleType="fitCenter" />
+
+            <TextView
+                android:id="@+id/previaEstado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:layout_margin="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:shadowColor="#CC000000"
+                android:shadowDx="0"
+                android:shadowDy="2"
+                android:shadowRadius="6"
+                android:textColor="#FFFFFFFF"
+                android:textSize="14sp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/previaCanal"
