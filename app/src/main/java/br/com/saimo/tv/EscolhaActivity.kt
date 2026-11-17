@@ -393,7 +393,7 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
     }
 
     private fun abrirAoVivo() {
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, AoVivoActivity::class.java))
     }
 
     private fun focarPrimeiro(tentativas: Int = 10) {
