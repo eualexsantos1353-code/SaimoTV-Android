@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
  * prévia à direita e destaques esportivos embaixo.
  *
  * A prévia mostra a imagem do canal e o programa no ar (do guia que já existe) e, depois de
- * [ESPERA_MS] parado no canal, um mini player mudo com o mesmo mecanismo de reprodução do player
+ * [ESPERA_MS] parado no canal, um mini player com o mesmo mecanismo de reprodução do player
  * de sempre ([Playback.mediaSource]). Um único player: é solto ao sair da tela, ao abrir o canal
  * e ao trocar de canal. Sem vídeo (carregando ou falha), a prévia segue com logo e programa.
  * O OK abre o player em tela cheia. Nada é inventado: sem guia, "Sem guia para este canal".
@@ -287,11 +287,14 @@ class AoVivoActivity : TelaComMenu() {
                     .setTargetBufferBytes(8 * 1024 * 1024)
                     .build())
             .build()
-        p.volume = 0f
+        p.volume = 1f
         // Prévia pequena: o vídeo não precisa passar de 720p (480p no aparelho com pouca memória).
         val (largura, altura) = if (Aparelho.poucaMemoria) 854 to 480 else 1280 to 720
         p.trackSelectionParameters = p.trackSelectionParameters.buildUpon()
-            .setMaxVideoSize(largura, altura).build()
+            .setMaxVideoSize(largura, altura)
+            // Sem legenda na prévia: ela cobria o texto do programa.
+            .setTrackTypeDisabled(androidx.media3.common.C.TRACK_TYPE_TEXT, true)
+            .build()
         p.addListener(object : Player.Listener {
             override fun onRenderedFirstFrame() {
                 if (player !== p) return
