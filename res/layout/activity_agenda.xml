@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A Agenda: menu lateral, filtros, calendário do mês à esquerda e o painel do dia à direita. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/astralFundo">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="64dp"
+        android:orientation="vertical"
+        android:paddingStart="32dp"
+        android:paddingTop="24dp"
+        android:paddingEnd="40dp"
+        android:paddingBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.12"
+            android:text="@string/agenda_titulo"
+            android:textColor="?attr/astralTexto"
+            android:textSize="32sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/agenda_frase"
+            android:textColor="?attr/astralTextoSecundario"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:id="@+id/agendaFiltros"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/agendaFiltro0"
+                style="@style/AgendaPilula"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/agenda_f_proximos" />
+            <TextView
+                android:id="@+id/agendaFiltro1"
+                style="@style/AgendaPilula"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/agenda_f_estreias" />
+            <TextView
+                android:id="@+id/agendaFiltro2"
+                style="@style/AgendaPilula"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/agenda_f_temporadas" />
+            <TextView
+                android:id="@+id/agendaFiltro3"
+                style="@style/AgendaPilula"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/agenda_f_filmes" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/agendaAviso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textColor="?attr/astralTextoSecundario"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <!-- Calendário: 7 colunas de 56dp. -->
+            <LinearLayout
+                android:layout_width="392dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/agendaMesAnterior"
+                        style="@style/AgendaSeta"
+                        android:layout_width="48dp"
+                        android:layout_height="40dp"
+                        android:text="‹" />
+                    <TextView
+                        android:id="@+id/agendaMesTitulo"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center"
+                        android:textColor="?attr/astralTexto"
+                        android:textSize="18sp" />
+                    <TextView
+                        android:id="@+id/agendaMesProximo"
+                        style="@style/AgendaSeta"
+                        android:layout_width="48dp"
+                        android:layout_height="40dp"
+                        android:text="›" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/agendaSemana"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal" />
+
+                <LinearLayout
+                    android:id="@+id/agendaGrade"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <!-- Painel do dia. -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="24dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/agendaDiaTitulo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="?attr/astralTexto"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/agendaEstado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textColor="?attr/astralTextoSutil"
+                    android:textSize="15sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/agendaLista"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:clipToPadding="false"
+                    android:focusable="false" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/agendaMenu"
+        android:layout_width="64dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp" />
+</FrameLayout>

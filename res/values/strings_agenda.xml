@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="agenda_menu">Agenda</string>
+    <string name="agenda_titulo">AGENDA</string>
+    <string name="agenda_frase">O que vem aí nas séries e nos filmes</string>
+    <string name="agenda_f_proximos">Próximos episódios</string>
+    <string name="agenda_f_estreias">Estreias</string>
+    <string name="agenda_f_temporadas">Novas temporadas</string>
+    <string name="agenda_f_filmes">Filmes</string>
+    <string name="agenda_carregando">Carregando a agenda…</string>
+    <string name="agenda_erro">Não foi possível carregar a agenda. Verifique a internet e abra de novo.</string>
+    <string name="agenda_vazio_dia">Nada neste dia.</string>
+    <string name="agenda_hint_trakt">Conecte o Trakt na página Nuvio para ver os próximos episódios das suas séries.</string>
+    <string name="agenda_ep">T%1$d · E%2$d</string>
+    <string name="agenda_estreia_serie">Estreia da série</string>
+    <string name="agenda_nova_temporada">Nova temporada · T%1$d</string>
+    <string name="agenda_filme">Filme</string>
+    <string name="agenda_filme_cinema">Estreia nos cinemas</string>
+    <string name="agenda_filme_digital">Lançamento digital</string>
+    <string name="agenda_filme_limitada">Estreia limitada</string>
+</resources>

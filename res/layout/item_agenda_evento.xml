@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Um item do painel do dia: pôster, nome, o que é e a hora/emissora. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="6dp"
+    android:background="@drawable/nuvio_foco"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="6dp">
+    <FrameLayout
+        android:id="@+id/agendaMoldura"
+        android:layout_width="48dp"
+        android:layout_height="72dp"
+        android:background="@drawable/nuvio_capa_fundo">
+        <TextView
+            android:id="@+id/agendaInicial"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:textColor="?attr/astralTextoSecundario"
+            android:textSize="22sp" />
+        <ImageView
+            android:id="@+id/agendaCapa"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/agendaNome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="2"
+            android:textColor="?attr/astralTexto"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/agendaDetalhe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="?attr/astralTextoSecundario"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/agendaMeta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="?attr/astralTextoSutil"
+            android:textSize="13sp" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Botão de filtro do topo da Agenda. -->
+    <style name="AgendaPilula">
+        <item name="android:background">@drawable/agenda_pilula</item>
+        <item name="android:focusable">true</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:textColor">@color/agenda_texto_pilula</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+    <!-- As setas do mês. -->
+    <style name="AgendaSeta">
+        <item name="android:background">@drawable/agenda_pilula</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/agenda_texto_pilula</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+</resources>

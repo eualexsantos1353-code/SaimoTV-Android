@@ -5,7 +5,7 @@ import android.content.Intent
 import androidx.media3.common.util.UnstableApi
 
 /** Em que tela do menu lateral a pessoa está. */
-enum class Destino { INICIO, NUVIO }
+enum class Destino { INICIO, NUVIO, AGENDA }
 
 /**
  * Os itens do menu lateral, num lugar só: o Início e a página Nuvio mostram o mesmo menu.
@@ -28,6 +28,9 @@ object MenuPrincipal {
             MenuLateral.Item(R.string.menu_ao_vivo, R.drawable.ic_live_tv) { ir(AoVivoActivity::class.java) },
             MenuLateral.Item(R.string.menu_nuvio, R.drawable.ic_nuvio, atual = atual == Destino.NUVIO) {
                 if (atual != Destino.NUVIO) ir(NuvioActivity::class.java)
+            },
+            MenuLateral.Item(R.string.agenda_menu, R.drawable.ic_agenda_cal, atual = atual == Destino.AGENDA) {
+                if (atual != Destino.AGENDA) ir(AgendaActivity::class.java)
             },
             MenuLateral.Item(R.string.menu_eventos, R.drawable.ic_football) { ir(EventosActivity::class.java) },
             MenuLateral.Item(R.string.menu_on_demand, R.drawable.ic_movie) { ir(OnDemandActivity::class.java) },
