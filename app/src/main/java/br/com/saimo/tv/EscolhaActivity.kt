@@ -297,6 +297,12 @@ class EscolhaActivity : TelaComMenu(), Connect.Listener {
         sino.nextFocusRightId = sino.id
         notificacoes = PainelNotificacoes(this, findViewById(R.id.ntfPainel), sino, findViewById(R.id.inicioSinoContador),
             listOf(findViewById(R.id.inicioConteudo), findViewById(R.id.inicioMenu)))
+        // O caminho até o sino: do botão do banner, para cima vai à busca e, no último título, para a direita vai ao sino.
+        val busca2 = findViewById<View>(R.id.inicioBusca)
+        busca2.nextFocusRightId = sino.id
+        sino.nextFocusLeftId = busca2.id
+        blocoContinuar.nextFocusUpId = busca2.id
+        blocoContinuar.nextFocusRightId = sino.id
         val aoFocar = View.OnFocusChangeListener { _, foco -> if (foco) cabecalhoPadrao() }
         for (id in listOf(R.id.inicioBusca, R.id.inicioSino, R.id.inicioBannerAssistir)) {
             findViewById<View>(id).onFocusChangeListener = aoFocar

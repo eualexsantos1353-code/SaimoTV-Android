@@ -49,10 +49,8 @@ class BannerInicio(
         assistir.setOnKeyListener { _, codigo, evento ->
             if (evento.action != KeyEvent.ACTION_DOWN) return@setOnKeyListener false
             when {
-                codigo == KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                    if (itens.size > 1) { mostrar((atual + 1) % itens.size); reiniciar() }
-                    true
-                }
+                // Passa ao próximo título; no último, deixa o foco seguir para a direita (o sino).
+                codigo == KeyEvent.KEYCODE_DPAD_RIGHT && atual < itens.size - 1 -> { mostrar(atual + 1); reiniciar(); true }
                 codigo == KeyEvent.KEYCODE_DPAD_LEFT && atual > 0 -> { mostrar(atual - 1); reiniciar(); true }
                 else -> false
             }
