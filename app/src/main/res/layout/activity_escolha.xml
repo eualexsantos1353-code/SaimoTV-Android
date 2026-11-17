@@ -42,8 +42,8 @@
             android:id="@+id/inicioPainel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="-48dp"
+            android:layout_marginTop="6dp"
             android:layout_marginEnd="48dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -149,7 +149,7 @@
         <FrameLayout
             android:id="@+id/inicioBanner"
             android:layout_width="match_parent"
-            android:layout_height="214dp"
+            android:layout_height="226dp"
             android:layout_marginStart="18dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="48dp"
@@ -173,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|start"
                 android:orientation="vertical"
-                android:padding="22dp">
+                android:padding="16dp">
                 <TextView
                     android:id="@+id/bannerTag"
                     android:layout_width="wrap_content"
@@ -195,7 +195,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:maxLines="1"
                     android:textColor="#FFFFFFFF"
-                    android:textSize="34sp"
+                    android:textSize="30sp"
                     android:textStyle="bold" />
                 <TextView
                     android:id="@+id/bannerMeta"
@@ -218,8 +218,8 @@
                 <TextView
                     android:id="@+id/inicioBannerAssistir"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_height="38dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/ntf_acao"
                     android:focusable="true"
                     android:fontFamily="sans-serif-medium"

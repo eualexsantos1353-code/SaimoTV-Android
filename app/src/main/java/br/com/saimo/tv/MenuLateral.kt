@@ -62,7 +62,7 @@ class MenuLateral(
                 gravity = Gravity.CENTER_VERTICAL
                 isFocusable = true
                 isSelected = item.atual
-                setBackgroundResource(R.drawable.bg_rail_item)
+                setBackgroundResource(R.drawable.astral_menu_item)
                 setPadding((12 * d).toInt(), 0, (12 * d).toInt(), 0)
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (48 * d).toInt())
                     .apply { topMargin = (4 * d).toInt(); bottomMargin = (4 * d).toInt() }
