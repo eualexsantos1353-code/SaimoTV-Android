@@ -29,8 +29,8 @@
             android:paddingTop="12dp"
             android:paddingEnd="18dp"
             android:paddingBottom="12dp"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_faint"
+            android:textColor="?attr/astralTexto"
+            android:textColorHint="?attr/astralTextoSutil"
             android:textSize="24sp" />
         <GridLayout
             android:id="@+id/buscaTeclas"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="@string/busca_ajuda"
-            android:textColor="@color/text_faint"
+            android:textColor="?attr/astralTextoSutil"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -72,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="◀ Teclado"
-                android:textColor="@color/accent"
+                android:textColor="?attr/astralAccent"
                 android:textSize="15sp"
                 android:fontFamily="sans-serif-medium"
                 android:background="@drawable/item_painel"
@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="16dp"
-                android:textColor="@color/text_secondary"
+                android:textColor="?attr/astralTextoSecundario"
                 android:textSize="15sp"
                 android:ellipsize="end"
                 android:maxLines="1" />
@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textColor="@color/text_secondary"
+                android:textColor="?attr/astralTextoSecundario"
                 android:textSize="22sp" />
         </FrameLayout>
     </LinearLayout>

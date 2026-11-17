@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/inicio_painel_nome"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/astralTexto"
                     android:textSize="22sp" />
                 <TextView
                     android:id="@+id/inicioBusca"
@@ -84,7 +84,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
-                        android:textColor="@color/text_primary"
+                        android:textColor="?attr/astralTexto"
                         android:textSize="26sp" />
                     <TextView
                         android:id="@+id/inicioData"
@@ -140,7 +140,7 @@
                             android:ellipsize="end"
                             android:fontFamily="sans-serif-medium"
                             android:maxLines="1"
-                            android:textColor="@color/text_primary"
+                            android:textColor="?attr/astralTexto"
                             android:textSize="26sp" />
                         <TextView
                             android:id="@+id/inicioContinuarPrograma"
@@ -232,7 +232,7 @@
         android:paddingTop="8dp"
         android:paddingEnd="18dp"
         android:paddingBottom="8dp"
-        android:textColor="@color/text_primary"
+        android:textColor="?attr/astralTexto"
         android:textSize="15sp"
         android:visibility="gone" />
 </FrameLayout>

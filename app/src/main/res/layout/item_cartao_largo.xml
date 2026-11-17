@@ -19,7 +19,7 @@
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
             android:paddingBottom="22dp"
-            android:textColor="#FFB993FF"
+            android:textColor="?attr/astralAccent"
             android:textSize="28sp" />
         <ImageView
             android:id="@+id/capaImagem"
@@ -44,7 +44,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:paddingBottom="6dp"
-            android:textColor="@color/text_primary"
+            android:textColor="?attr/astralTexto"
             android:textSize="14sp" />
         <TextView
             android:id="@+id/eventoSelo"

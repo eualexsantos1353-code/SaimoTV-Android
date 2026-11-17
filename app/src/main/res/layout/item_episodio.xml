@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:textColor="@color/accent"
+            android:textColor="?attr/astralAccent"
             android:textSize="40sp" />
         <ImageView
             android:id="@+id/epImagem"
@@ -42,8 +42,8 @@
             android:gravity="center_vertical"
             android:text="@string/player_visto"
             app:drawableStartCompat="@drawable/ic_check"
-            app:drawableTint="@color/accent"
-            android:textColor="@color/accent"
+            app:drawableTint="?attr/astralAccent"
+            android:textColor="?attr/astralAccent"
             android:textSize="14sp"
             android:visibility="gone" />
         <ProgressBar
@@ -64,7 +64,7 @@
         android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:maxLines="1"
-        android:textColor="@color/text_primary"
+        android:textColor="?attr/astralTexto"
         android:textSize="17sp" />
     <TextView
         android:id="@+id/epDetalhe"
@@ -73,6 +73,6 @@
         android:layout_marginTop="2dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/text_secondary"
+        android:textColor="?attr/astralTextoSecundario"
         android:textSize="14sp" />
 </LinearLayout>

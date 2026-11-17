@@ -3,14 +3,14 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="#FF3A2575" />
+            <solid android:color="?attr/astralAccentFundo" />
             <stroke android:width="2dp" android:color="#FFFFFFFF" />
             <corners android:radius="100dp" />
         </shape>
     </item>
     <item android:state_selected="true">
         <shape android:shape="rectangle">
-            <solid android:color="#FF5B3BC4" />
+            <solid android:color="?attr/astralAccentSolido" />
             <stroke android:width="1dp" android:color="#99FFFFFF" />
             <corners android:radius="100dp" />
         </shape>

@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:textColor="@color/text_primary"
+            android:textColor="?attr/astralTexto"
             android:textSize="34sp" />
         <TextView
             android:id="@+id/gradeContagem"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:textColor="@color/text_secondary"
+            android:textColor="?attr/astralTextoSecundario"
             android:textSize="18sp" />
     </LinearLayout>
 
@@ -139,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/vod_carregando"
-                android:textColor="@color/text_secondary"
+                android:textColor="?attr/astralTextoSecundario"
                 android:textSize="22sp" />
         </FrameLayout>
     </LinearLayout>
@@ -151,6 +151,6 @@
         android:paddingTop="8dp"
         android:paddingBottom="18dp"
         android:text="@string/grade_dica"
-        android:textColor="@color/text_faint"
+        android:textColor="?attr/astralTextoSutil"
         android:textSize="15sp" />
 </LinearLayout>

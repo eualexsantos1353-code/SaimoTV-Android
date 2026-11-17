@@ -23,7 +23,7 @@
             android:layout_height="match_parent"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:textColor="@color/accent"
+            android:textColor="?attr/astralAccent"
             android:textSize="30sp" />
 
         <ImageView
@@ -41,7 +41,7 @@
         android:layout_marginTop="6dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/text_primary"
+        android:textColor="?attr/astralTexto"
         android:textSize="13sp" />
 
     <TextView
@@ -50,6 +50,6 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/text_faint"
+        android:textColor="?attr/astralTextoSutil"
         android:textSize="11sp" />
 </LinearLayout>

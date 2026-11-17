@@ -3,7 +3,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <gradient android:angle="315" android:startColor="#FF4A2F9A" android:endColor="#FF2A1A62" />
+            <gradient android:angle="315" android:startColor="?attr/astralAccentForte" android:endColor="?attr/astralAccentForte2" />
             <stroke android:width="3dp" android:color="#FFFFFFFF" />
             <corners android:radius="22dp" />
         </shape>

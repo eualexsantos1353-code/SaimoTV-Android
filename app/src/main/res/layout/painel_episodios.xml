@@ -25,7 +25,7 @@
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
-            android:textColor="@color/text_primary"
+            android:textColor="?attr/astralTexto"
             android:textSize="26sp" />
         <TextView
             android:id="@+id/peSubtitulo"
@@ -35,7 +35,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/text_secondary"
+            android:textColor="?attr/astralTextoSecundario"
             android:textSize="17sp" />
     </LinearLayout>
 
@@ -76,6 +76,6 @@
         android:paddingStart="48dp"
         android:paddingEnd="48dp"
         android:text="@string/player_eps_dica"
-        android:textColor="@color/text_faint"
+        android:textColor="?attr/astralTextoSutil"
         android:textSize="15sp" />
 </LinearLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ASTRAL: cores que mudam com o tema e com o wallpaper. Os layouts e drawables
+     apontam para estes atributos em vez de cores fixas. -->
+<resources>
+    <attr name="astralAccent" format="color" />
+    <attr name="astralAccentSolido" format="color" />
+    <attr name="astralAccentFundo" format="color" />
+    <attr name="astralAccentFundo2" format="color" />
+    <attr name="astralAccentForte" format="color" />
+    <attr name="astralAccentForte2" format="color" />
+    <attr name="astralSuperficieA" format="color" />
+    <attr name="astralSuperficieB" format="color" />
+    <attr name="astralBrilho" format="color" />
+    <attr name="astralTexto" format="color" />
+    <attr name="astralTextoSecundario" format="color" />
+    <attr name="astralTextoSutil" format="color" />
+</resources>

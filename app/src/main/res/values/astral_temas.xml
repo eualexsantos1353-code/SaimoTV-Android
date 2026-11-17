@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sobreposições de tema do ASTRAL. Tema.kt aplica uma de modo (Escuro/Claro)
+     e uma de wallpaper (cor de destaque) sobre o tema de cada tela. -->
+<resources>
+    <style name="AstralEscuro" parent="">
+        <item name="astralTexto">#FFFFFFFF</item>
+        <item name="astralTextoSecundario">#FFA8B4C0</item>
+        <item name="astralTextoSutil">#66FFFFFF</item>
+    </style>
+    <!-- Claro: só os textos por enquanto. As superfícies ainda são escuras;
+         Tema.CLARO_PRONTO continua falso até a fase 2b converter as telas. -->
+    <style name="AstralClaro" parent="">
+        <item name="astralTexto">#FF14121C</item>
+        <item name="astralTextoSecundario">#FF4A4560</item>
+        <item name="astralTextoSutil">#FF8A86A0</item>
+    </style>
+    <style name="AstralFundoRoxo" parent="">
+        <item name="astralAccent">#FFB993FF</item>
+        <item name="astralAccentSolido">#FF5B3BC4</item>
+        <item name="astralAccentFundo">#FF3A2575</item>
+        <item name="astralAccentFundo2">#FF22164A</item>
+        <item name="astralAccentForte">#FF4A2F9A</item>
+        <item name="astralAccentForte2">#FF2A1A62</item>
+        <item name="astralSuperficieA">#FF1D1438</item>
+        <item name="astralSuperficieB">#FF120C26</item>
+        <item name="astralBrilho">#FF1B0D3A</item>
+    </style>
+    <style name="AstralFundoAzul" parent="">
+        <item name="astralAccent">#FF7DB4FF</item>
+        <item name="astralAccentSolido">#FF2F5FD0</item>
+        <item name="astralAccentFundo">#FF1B3A7A</item>
+        <item name="astralAccentFundo2">#FF112450</item>
+        <item name="astralAccentForte">#FF2A52B0</item>
+        <item name="astralAccentForte2">#FF19327A</item>
+        <item name="astralSuperficieA">#FF0F1A38</item>
+        <item name="astralSuperficieB">#FF0A1226</item>
+        <item name="astralBrilho">#FF0D1B3A</item>
+    </style>
+    <style name="AstralFundoVermelho" parent="">
+        <item name="astralAccent">#FFFF8A8A</item>
+        <item name="astralAccentSolido">#FFC23B3B</item>
+        <item name="astralAccentFundo">#FF7A1F2A</item>
+        <item name="astralAccentFundo2">#FF4A121A</item>
+        <item name="astralAccentForte">#FFA8303A</item>
+        <item name="astralAccentForte2">#FF6E1C24</item>
+        <item name="astralSuperficieA">#FF381016</item>
+        <item name="astralSuperficieB">#FF260A0E</item>
+        <item name="astralBrilho">#FF3A0D14</item>
+    </style>
+    <style name="AstralFundoAmbar" parent="">
+        <item name="astralAccent">#FFFFC266</item>
+        <item name="astralAccentSolido">#FFC26A0A</item>
+        <item name="astralAccentFundo">#FF7A4A0F</item>
+        <item name="astralAccentFundo2">#FF4A2C08</item>
+        <item name="astralAccentForte">#FFA8640E</item>
+        <item name="astralAccentForte2">#FF6E4009</item>
+        <item name="astralSuperficieA">#FF38240F</item>
+        <item name="astralSuperficieB">#FF261808</item>
+        <item name="astralBrilho">#FF3A230D</item>
+    </style>
+</resources>

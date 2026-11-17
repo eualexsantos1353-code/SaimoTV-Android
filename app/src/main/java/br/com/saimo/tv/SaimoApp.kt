@@ -48,11 +48,14 @@ class SaimoApp : Application(), SingletonImageLoader.Factory {
     override fun onCreate() {
         super.onCreate()
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
-            override fun onActivityCreated(activity: android.app.Activity, savedInstanceState: android.os.Bundle?) {}
+            override fun onActivityCreated(activity: android.app.Activity, savedInstanceState: android.os.Bundle?) {
+                if (Preferencias.estaPronta()) Tema.aplicar(activity)
+            }
             override fun onActivityStarted(activity: android.app.Activity) {}
             override fun onActivityResumed(activity: android.app.Activity) {
                 atividadeAtual = activity
                 Connect.notificarMudancaDeEstado()
+                if (Preferencias.estaPronta()) Tema.verificar(activity)
             }
             override fun onActivityPaused(activity: android.app.Activity) {
                 if (atividadeAtual === activity) {

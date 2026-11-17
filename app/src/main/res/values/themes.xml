@@ -4,7 +4,19 @@
         <item name="android:windowBackground">@drawable/fundo_app</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowActivityTransitions">true</item>
-        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:colorAccent">?attr/astralAccent</item>
+        <item name="astralTexto">#FFFFFFFF</item>
+        <item name="astralTextoSecundario">#FFA8B4C0</item>
+        <item name="astralTextoSutil">#66FFFFFF</item>
+        <item name="astralAccent">#FFB993FF</item>
+        <item name="astralAccentSolido">#FF5B3BC4</item>
+        <item name="astralAccentFundo">#FF3A2575</item>
+        <item name="astralAccentFundo2">#FF22164A</item>
+        <item name="astralAccentForte">#FF4A2F9A</item>
+        <item name="astralAccentForte2">#FF2A1A62</item>
+        <item name="astralSuperficieA">#FF1D1438</item>
+        <item name="astralSuperficieB">#FF120C26</item>
+        <item name="astralBrilho">#FF1B0D3A</item>
     </style>
 
     <!-- Telas de vídeo: fundo preto liso. A imagem de fundo do app (uns 3,7 MB
@@ -51,7 +63,7 @@
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColor">?attr/astralTexto</item>
         <item name="android:textSize">16sp</item>
     </style>
 </resources>

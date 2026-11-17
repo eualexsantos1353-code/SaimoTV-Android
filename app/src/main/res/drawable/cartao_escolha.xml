@@ -8,7 +8,7 @@
                 android:angle="270"
                 android:startColor="#334FE3D0"
                 android:endColor="#1AFFFFFF" />
-            <stroke android:width="4dp" android:color="@color/accent" />
+            <stroke android:width="4dp" android:color="?attr/astralAccent" />
             <corners android:radius="28dp" />
         </shape>
     </item>

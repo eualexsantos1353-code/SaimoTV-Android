@@ -103,7 +103,7 @@
                     android:ellipsize="end"
                     android:fontFamily="sans-serif-black"
                     android:maxLines="1"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/astralTexto"
                     android:textSize="28sp" />
                 <TextView
                     android:id="@+id/capaSub"
@@ -111,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?attr/astralTextoSecundario"
                     android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>

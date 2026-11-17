@@ -35,7 +35,7 @@
         android:layout_marginEnd="56dp"
         android:format12Hour="HH:mm"
         android:format24Hour="HH:mm"
-        android:textColor="@color/text_primary"
+        android:textColor="?attr/astralTexto"
         android:textSize="30sp" />
 
     <LinearLayout
@@ -59,7 +59,7 @@
                 android:layout_height="match_parent"
                 android:fontFamily="sans-serif-black"
                 android:gravity="center"
-                android:textColor="@color/accent"
+                android:textColor="?attr/astralAccent"
                 android:textSize="110sp" />
             <ImageView
                 android:id="@+id/radioLogo"
@@ -99,7 +99,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:letterSpacing="0.12"
                     android:text="@string/radio_ao_vivo"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/astralTexto"
                     android:textSize="15sp" />
             </LinearLayout>
 
@@ -111,7 +111,7 @@
                 android:ellipsize="end"
                 android:fontFamily="sans-serif-black"
                 android:maxLines="2"
-                android:textColor="@color/text_primary"
+                android:textColor="?attr/astralTexto"
                 android:textSize="64sp" />
 
             <TextView
@@ -119,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/accent"
+                android:textColor="?attr/astralAccent"
                 android:textSize="22sp" />
 
             <br.com.saimo.tv.Equalizador
@@ -136,6 +136,6 @@
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="44dp"
         android:text="@string/radio_dica_tocando"
-        android:textColor="@color/text_secondary"
+        android:textColor="?attr/astralTextoSecundario"
         android:textSize="17sp" />
 </FrameLayout>

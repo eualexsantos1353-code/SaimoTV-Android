@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:gravity="end"
         android:layout_marginEnd="14dp"
-        android:textColor="@color/text_faint"
+        android:textColor="?attr/astralTextoSutil"
         android:textSize="18sp" />
 
     <FrameLayout
@@ -55,7 +55,7 @@
             android:letterSpacing="0.08"
             android:maxLines="1"
             android:textAllCaps="true"
-            android:textColor="@color/accent"
+            android:textColor="?attr/astralAccent"
             android:textSize="13sp"
             android:visibility="gone" />
 
@@ -66,7 +66,7 @@
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
-            android:textColor="@color/text_primary"
+            android:textColor="?attr/astralTexto"
             android:textSize="21sp" />
 
         <TextView
@@ -76,7 +76,7 @@
             android:layout_marginTop="3dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/text_secondary"
+            android:textColor="?attr/astralTextoSecundario"
             android:textSize="16sp" />
 
         <ProgressBar
@@ -98,7 +98,7 @@
         android:layout_marginStart="10dp"
         android:text=""
         app:drawableStartCompat="@drawable/ic_star"
-        app:drawableTint="@color/accent"
+        app:drawableTint="?attr/astralAccent"
         android:textSize="18sp"
         android:visibility="gone" />
 </LinearLayout>

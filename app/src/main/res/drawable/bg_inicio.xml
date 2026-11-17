@@ -2,5 +2,5 @@
 <!-- Fundo do Início: preto com um brilho roxo discreto no canto de cima, à direita. Só esta tela usa. -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
     <gradient android:angle="45" android:startColor="#FF06040B" android:centerColor="#FF0B0716"
-        android:endColor="#FF1B0D3A" />
+        android:endColor="?attr/astralBrilho" />
 </shape>

@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:textColor="@color/accent"
+            android:textColor="?attr/astralAccent"
             android:textSize="34sp" />
 
         <ImageView
@@ -76,6 +76,6 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:minLines="2"
-        android:textColor="@color/text_primary"
+        android:textColor="?attr/astralTexto"
         android:textSize="15sp" />
 </LinearLayout>

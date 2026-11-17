@@ -108,6 +108,26 @@ object Preferencias {
         historicoBusca = listOf(limpo) + historicoBusca.filterNot { it.equals(limpo, ignoreCase = true) }
     }
 
+    /** Tema: "claro", "escuro" ou "auto". */
+    var temaModo: String
+        get() = prefs.getString("temaModo", "escuro") ?: "escuro"
+        set(valor) = prefs.edit().putString("temaModo", valor).apply()
+
+    /** Wallpaper (e cor de destaque): "ambar", "vermelho", "azul" ou "roxo". */
+    var temaFundo: String
+        get() = prefs.getString("temaFundo", "roxo") ?: "roxo"
+        set(valor) = prefs.edit().putString("temaFundo", valor).apply()
+
+    /** Automático: minutos desde a meia-noite em que o Claro começa (07:00). */
+    var temaClaroAs: Int
+        get() = prefs.getInt("temaClaroAs", 7 * 60)
+        set(valor) = prefs.edit().putInt("temaClaroAs", valor).apply()
+
+    /** Automático: minutos desde a meia-noite em que o Escuro começa (19:00). */
+    var temaEscuroAs: Int
+        get() = prefs.getInt("temaEscuroAs", 19 * 60)
+        set(valor) = prefs.edit().putInt("temaEscuroAs", valor).apply()
+
     /** ID curto do aparelho, para suporte: o mesmo que a telemetria usa. */
     fun idCurto(context: Context): String =
         context.getSharedPreferences("telemetria", Context.MODE_PRIVATE)

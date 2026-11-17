@@ -29,7 +29,7 @@
         <ProgressBar
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:indeterminateTint="@color/accent" />
+            android:indeterminateTint="?attr/astralAccent" />
         <TextView
             android:id="@+id/playerStatus"
             android:layout_width="wrap_content"
@@ -37,7 +37,7 @@
             android:layout_marginTop="16dp"
             android:shadowColor="#CC000000"
             android:shadowRadius="8"
-            android:textColor="@color/text_primary"
+            android:textColor="?attr/astralTexto"
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -79,7 +79,7 @@
                 android:ellipsize="end"
                 android:fontFamily="sans-serif-medium"
                 android:maxLines="1"
-                android:textColor="@color/text_primary"
+                android:textColor="?attr/astralTexto"
                 android:textSize="32sp" />
             <TextView
                 android:id="@+id/playerSubtitulo"
@@ -88,7 +88,7 @@
                 android:layout_marginTop="4dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/text_secondary"
+                android:textColor="?attr/astralTextoSecundario"
                 android:textSize="20sp" />
         </LinearLayout>
         <TextView
@@ -101,7 +101,7 @@
             android:paddingTop="4dp"
             android:paddingEnd="12dp"
             android:paddingBottom="4dp"
-            android:textColor="@color/text_primary"
+            android:textColor="?attr/astralTexto"
             android:textSize="15sp"
             android:visibility="gone" />
         <TextView
@@ -109,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:textColor="@color/text_primary"
+            android:textColor="?attr/astralTexto"
             android:textSize="22sp" />
     </LinearLayout>
 
@@ -140,7 +140,7 @@
             android:paddingTop="6dp"
             android:paddingEnd="16dp"
             android:paddingBottom="6dp"
-            android:textColor="@color/text_primary"
+            android:textColor="?attr/astralTexto"
             android:textSize="22sp"
             android:visibility="invisible" />
 
@@ -161,7 +161,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="84dp"
-                android:textColor="@color/text_primary"
+                android:textColor="?attr/astralTexto"
                 android:textSize="19sp" />
             <ProgressBar
                 android:id="@+id/playerProgresso"
@@ -179,7 +179,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:minWidth="84dp"
-                android:textColor="@color/text_secondary"
+                android:textColor="?attr/astralTextoSecundario"
                 android:textSize="19sp" />
         </LinearLayout>
 
@@ -250,7 +250,7 @@
                     android:id="@+id/proximoContagem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/accent"
+                    android:textColor="?attr/astralAccent"
                     android:textSize="17sp" />
                 <TextView
                     android:id="@+id/proximoTitulo"
@@ -260,7 +260,7 @@
                     android:ellipsize="end"
                     android:fontFamily="sans-serif-medium"
                     android:maxLines="2"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/astralTexto"
                     android:textSize="21sp" />
             </LinearLayout>
         </LinearLayout>
@@ -322,7 +322,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
-                android:textColor="@color/text_primary"
+                android:textColor="?attr/astralTexto"
                 android:textSize="27sp" />
             <TextView
                 android:id="@+id/avisoTexto"
@@ -330,7 +330,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:textColor="@color/text_secondary"
+                android:textColor="?attr/astralTextoSecundario"
                 android:textSize="18sp" />
             <HorizontalScrollView
                 android:id="@+id/recomendacoesScroll"

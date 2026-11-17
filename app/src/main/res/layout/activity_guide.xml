@@ -25,7 +25,7 @@
             android:layout_weight="1"
             android:fontFamily="sans-serif-medium"
             android:text="@string/guide"
-            android:textColor="@color/text_primary"
+            android:textColor="?attr/astralTexto"
             android:textSize="32sp" />
 
         <TextView
@@ -34,14 +34,14 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="22dp"
             android:fontFamily="sans-serif-medium"
-            android:textColor="@color/accent"
+            android:textColor="?attr/astralAccent"
             android:textSize="24sp" />
 
         <TextView
             android:id="@+id/guideInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_secondary"
+            android:textColor="?attr/astralTextoSecundario"
             android:textSize="17sp" />
     </LinearLayout>
 
@@ -123,7 +123,7 @@
                     android:id="@+id/fichaCanal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/accent"
+                    android:textColor="?attr/astralAccent"
                     android:textSize="17sp" />
 
                 <TextView
@@ -132,7 +132,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:fontFamily="sans-serif-medium"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/astralTexto"
                     android:textSize="30sp" />
 
                 <TextView
@@ -140,7 +140,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?attr/astralTextoSecundario"
                     android:textSize="19sp" />
 
                 <ProgressBar
@@ -158,7 +158,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?attr/astralTextoSecundario"
                     android:textSize="18sp" />
 
                 <!-- Sinopse: o guia traz e é o que a pessoa quer ler. Rola,
@@ -176,7 +176,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:lineSpacingExtra="4dp"
-                        android:textColor="@color/text_primary"
+                        android:textColor="?attr/astralTexto"
                         android:textSize="18sp"
                         android:visibility="gone" />
                 </ScrollView>
@@ -186,7 +186,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?attr/astralTextoSecundario"
                     android:textSize="16sp"
                     android:visibility="gone" />
 
@@ -207,7 +207,7 @@
                         android:paddingEnd="24dp"
                         android:paddingBottom="12dp"
                         android:text="@string/ficha_assistir"
-                        android:textColor="@color/text_primary"
+                        android:textColor="?attr/astralTexto"
                         android:textSize="18sp" />
 
                     <TextView
@@ -222,7 +222,7 @@
                         android:paddingTop="12dp"
                         android:paddingEnd="24dp"
                         android:paddingBottom="12dp"
-                        android:textColor="@color/text_primary"
+                        android:textColor="?attr/astralTexto"
                         android:textSize="18sp"
                         android:visibility="gone" />
 
@@ -238,7 +238,7 @@
                         android:paddingEnd="24dp"
                         android:paddingBottom="12dp"
                         android:text="@string/ficha_fechar"
-                        android:textColor="@color/text_primary"
+                        android:textColor="?attr/astralTexto"
                         android:textSize="18sp" />
                 </LinearLayout>
             </LinearLayout>

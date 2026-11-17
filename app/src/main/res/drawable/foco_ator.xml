@@ -3,7 +3,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <shape android:shape="oval">
-            <stroke android:width="3dp" android:color="@color/accent" />
+            <stroke android:width="3dp" android:color="?attr/astralAccent" />
             <solid android:color="#00000000" />
         </shape>
     </item>

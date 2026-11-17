@@ -68,7 +68,7 @@
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif-medium"
                     android:gravity="center"
-                    android:textColor="@color/accent"
+                    android:textColor="?attr/astralAccent"
                     android:textSize="54sp" />
 
                 <ImageView
@@ -94,7 +94,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:letterSpacing="0.15"
                     android:textAllCaps="true"
-                    android:textColor="@color/accent"
+                    android:textColor="?attr/astralAccent"
                     android:textSize="13sp" />
 
                 <TextView
@@ -105,7 +105,7 @@
                     android:ellipsize="end"
                     android:fontFamily="sans-serif-medium"
                     android:maxLines="1"
-                    android:textColor="@color/text_primary"
+                    android:textColor="?attr/astralTexto"
                     android:textSize="32sp" />
 
                 <TextView
@@ -115,7 +115,7 @@
                     android:layout_marginTop="4dp"
                     android:maxLines="1"
                     android:ellipsize="end"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?attr/astralTextoSecundario"
                     android:textSize="16sp"
                     android:textStyle="italic"
                     android:visibility="gone" />
@@ -133,7 +133,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="?attr/astralTextoSecundario"
                     android:textSize="15sp"
                     android:visibility="gone" />
 
@@ -218,7 +218,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/player_episodios"
-                android:textColor="@color/text_primary"
+                android:textColor="?attr/astralTexto"
                 android:textSize="22sp" />
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -257,7 +257,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/vod_ficha_elenco"
-                android:textColor="@color/text_primary"
+                android:textColor="?attr/astralTexto"
                 android:textSize="18sp"
                 android:visibility="gone" />
 
@@ -270,7 +270,7 @@
                 android:ellipsize="end"
                 android:gravity="end"
                 android:maxLines="1"
-                android:textColor="@color/text_secondary"
+                android:textColor="?attr/astralTextoSecundario"
                 android:textSize="14sp"
                 android:visibility="gone" />
         </LinearLayout>
@@ -298,7 +298,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/ficha_parecidos"
-                android:textColor="@color/text_primary"
+                android:textColor="?attr/astralTexto"
                 android:textSize="22sp" />
             <br.com.saimo.tv.ListaSemFuga
                 android:id="@+id/fichaParecidos"
@@ -318,5 +318,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="32dp"
-        android:indeterminateTint="@color/accent" />
+        android:indeterminateTint="?attr/astralAccent" />
 </FrameLayout>

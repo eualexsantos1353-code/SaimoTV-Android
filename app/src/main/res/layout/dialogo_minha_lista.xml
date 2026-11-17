@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
             android:text="@string/ml_titulo_link"
-            android:textColor="@color/text_primary"
+            android:textColor="?attr/astralTexto"
             android:textSize="28sp" />
 
         <TextView
@@ -30,7 +30,7 @@
             android:layout_marginTop="8dp"
             android:lineSpacingMultiplier="1.15"
             android:text="@string/ml_celular_dica"
-            android:textColor="@color/text_secondary"
+            android:textColor="?attr/astralTextoSecundario"
             android:textSize="18sp" />
 
         <TextView
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="@string/ml_link"
-            android:textColor="@color/accent"
+            android:textColor="?attr/astralAccent"
             android:textSize="16sp" />
 
         <EditText
@@ -55,8 +55,8 @@
             android:nextFocusDown="@+id/mlUsuario"
             android:padding="14dp"
             android:singleLine="true"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_faint"
+            android:textColor="?attr/astralTexto"
+            android:textColorHint="?attr/astralTextoSutil"
             android:textSize="20sp" />
 
         <TextView
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/ml_usuario"
-            android:textColor="@color/accent"
+            android:textColor="?attr/astralAccent"
             android:textSize="16sp" />
 
         <EditText
@@ -81,8 +81,8 @@
             android:nextFocusDown="@+id/mlSenha"
             android:padding="14dp"
             android:singleLine="true"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_faint"
+            android:textColor="?attr/astralTexto"
+            android:textColorHint="?attr/astralTextoSutil"
             android:textSize="20sp" />
 
         <TextView
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/ml_senha"
-            android:textColor="@color/accent"
+            android:textColor="?attr/astralAccent"
             android:textSize="16sp" />
 
         <EditText
@@ -107,8 +107,8 @@
             android:nextFocusDown="@+id/mlNome"
             android:padding="14dp"
             android:singleLine="true"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_faint"
+            android:textColor="?attr/astralTexto"
+            android:textColorHint="?attr/astralTextoSutil"
             android:textSize="20sp" />
 
         <TextView
@@ -116,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/ml_nome"
-            android:textColor="@color/accent"
+            android:textColor="?attr/astralAccent"
             android:textSize="16sp" />
 
         <EditText
@@ -133,8 +133,8 @@
             android:nextFocusDown="@+id/mlAdicionar"
             android:padding="14dp"
             android:singleLine="true"
-            android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_faint"
+            android:textColor="?attr/astralTexto"
+            android:textColorHint="?attr/astralTextoSutil"
             android:textSize="20sp" />
 
         <LinearLayout
